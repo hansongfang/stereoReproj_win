@@ -1,6 +1,7 @@
 #include "ReprojMT.h"
 #include <math.h>
 #include <glm/gtc/matrix_inverse.hpp>
+#define PI 3.14159265
 
 // render -> cached1, render -> cached2, render -> cached3
 // render -> cached -> cached -> cached -> update
@@ -368,7 +369,7 @@ void ReprojMT::updateReprojMTShader(int numTarget, const vector<int>& targetIds,
 vector<float> ReprojMT::renderReprojMT(float threshold, bool leftPrimary, bool enableFlip, bool debug)
 {
     bool savePNG = true;
-    bool usePhong = false;
+    bool usePhong = true;
     _measureQuality = true;
     float thresholdId = threshold / 0.0001;
     string thresholdDir = _directory + to_string(int(round(thresholdId))) + "/";
@@ -538,6 +539,11 @@ void ReprojMT::setMVP(int frameId, bool left, worldViewProj& mvp)
 	getchar();*/
     glm::mat4 trans = glm::translate(glm::mat4(1.0), glm::vec3(translateX, 0.0f, 0.0f));
     //mvp.modelWorld = glm::rotate(trans, glm::radians(curDegree), glm::vec3(0.0, 1.0, 0.0));
+	/*float theta = 0 * PI / 180.0 ;
+	float phi = 30 * PI / 180.0;
+	float y = cos(theta);
+	float x = sin(theta) * sin(phi);
+	float z = sin(theta) * cos(phi);*/
 	mvp.modelWorld = glm::rotate(trans, curDegree, glm::vec3(0.0, 1.0, 0.0));
 }
 
