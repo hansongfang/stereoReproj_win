@@ -127,6 +127,13 @@ vec3 noise_diffuse()
 
 void main()
 {
+  //loopy
+  vec3 temp = vec3(1.0,1.0,1.0);
+  for(uint i=0; i< loopy; i++){
+	for(uint j=0; j<loopy; j++){
+		temp.x = mod(sqrt(i), 2.0);
+	}
+  }
   // Perlin noise diffuse layer
   // use noise as material color for ambient color and diffuse calculation
   vec3 noise_color = noise_diffuse();
@@ -139,16 +146,8 @@ void main()
 	float diffuse = max(dot(normal, lVector), 0.0);
 	color.xyz += uKd * noise_color * uDirLightColor * diffuse * 1.5;
 
-	//loopy
-	vec3 temp = vec3(1.0,1.0,1.0);
-	for(uint i=0; i< loopy; i++){
-		for(uint j=0; j<loopy; j++){
-			temp.x = mod(sqrt(i), 2.0);
-		}
-	}
-
   vec3 targetPos_ndc = vec3(targetPos.x, targetPos.y, targetPos.z) / targetPos.w;
   float fragDepth = (targetPos_ndc.z + 1.0) / 2.0;
-	color.a = fragDepth;
+  color.a = fragDepth;
   color.a = 1.0;
 }

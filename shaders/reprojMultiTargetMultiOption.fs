@@ -14,6 +14,7 @@ uniform float threshold;
 uniform float epsilon;
 uniform int renderOption;
 uniform int usePhong;
+uniform uint loopy;
 
 // reshading
 in vec3 vFragPos;
@@ -168,6 +169,13 @@ vec4 reShadingPhong()
 
 vec4 reShading()
 {
+  //loopy
+  vec3 temp = vec3(1.0,1.0,1.0);
+  for(uint i=0; i< loopy; i++){
+	for(uint j=0; j<loopy; j++){
+		temp.x = mod(sqrt(i), 2.0);
+	}
+  }
   if(usePhong == 1){
     return reShadingPhong();
   }

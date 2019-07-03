@@ -212,11 +212,12 @@ void ReprojMT::updateNoiseShader(const worldViewProj& mvp)
 
 void ReprojMT::setupReprojMTShader()
 {
-    string verPath = SHADERPATH + "reprojMultiTargetMultiOption.vs";
-    string fragPath = SHADERPATH + "reprojMultiTargetMultiOption.fs";
+    string verPath = SHADERPATH + "time.vs";
+    string fragPath = SHADERPATH + "time.fs";
     _reprojShaderMT.init(verPath.c_str(), fragPath.c_str());
     _reprojShaderMT.use();
     _reprojShaderMT.SetUnInt("loopx", 1);
+	_reprojShaderMT.SetUnInt("loopy", 1);
 
     // reshading
     glm::vec3 materialColor(1.0, 1.0, 1.0);
@@ -325,8 +326,15 @@ void ReprojMT::updateShaderComplex(int loopVS, int loopFS)
     _phongShader.SetUnInt("loopx", loopVS);
     _phongShader.SetUnInt("loopy", loopFS);
 
+	// noise
+	_noiseShader.use();
+	_noiseShader.SetUnInt("loopx", loopVS);
+	_noiseShader.SetUnInt("loopy", loopFS);
+
+	// reprojShader
     _reprojShaderMT.use();
     _reprojShaderMT.SetUnInt("loopx", loopVS);
+	_reprojShaderMT.SetUnInt("loopy", loopFS);
 }
 
 // -------------------------Reprojection----------------------------------//
@@ -407,6 +415,7 @@ vector<float> ReprojMT::renderReprojMT(float threshold, bool leftPrimary, bool e
     }
 
     float avgPSNR = 0.0, avgSSIM = 0.0;
+	float avgTime = 0.0, avgGTTime = 0.0;
     int countPSNR = 0;
     cv::Mat repMat, gdMat;
     vector<int> targetIds(_numTargets, 0); // track the reference images
@@ -440,7 +449,8 @@ vector<float> ReprojMT::renderReprojMT(float threshold, bool leftPrimary, bool e
         glBindFramebuffer(GL_FRAMEBUFFER, _cacheFBO.gBuffer);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         updateReprojMTShader(_numTargets, targetIds, curMVP);
-        _coarseA->Draw(_reprojShaderMT);
+        double time = _coarseA->Draw(_reprojShaderMT);
+		avgTime += time;
         if (debug) {
             this->saveFigure(savePNG, frameId, thresholdDir, renderLeft);
         }
@@ -454,11 +464,14 @@ vector<float> ReprojMT::renderReprojMT(float threshold, bool leftPrimary, bool e
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             if(usePhong){
                 updatePhongShader(curMVP);
-                _a->Draw(_phongShader);
+                double time2 = _a->Draw(_phongShader);
+				avgGTTime += time2;
             }
             else{
                 updateNoiseShader(curMVP);
-                _a->Draw(_noiseShader);
+                double time2 = _a->Draw(_noiseShader);
+				avgGTTime += time2;
+				cout << time2 << " " << avgGTTime << endl;
             }
             _window->aftRender();
             if(debug){
@@ -479,9 +492,12 @@ vector<float> ReprojMT::renderReprojMT(float threshold, bool leftPrimary, bool e
     if(_measureQuality){
         avgPSNR /= countPSNR;
         avgSSIM /= countPSNR;
+		avgTime /= countPSNR;
+		avgGTTime /= countPSNR;
         cout<<"psnr "<<avgPSNR<<" ssim "<<avgSSIM<<endl;
+		cout << "cTime " << avgTime << " GTTime " << avgGTTime << endl;
     }
-    return vector<float>{avgPSNR, avgSSIM};
+    return vector<float>{avgPSNR, avgSSIM, avgTime, avgGTTime};
 }
 
 void ReprojMT::saveFigure(bool savePNG, int frameId, const string &thresholdDir, bool renderLeft)
