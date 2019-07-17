@@ -203,6 +203,8 @@ vec4 reprojColor(vec4 targetPos, TargetTexture tts)
 
 void main()
 {
+  uint counter = atomicCounterIncrement(ac_frag);
+
   vec3 repColor[NUMTARGET];
   float repDiff[NUMTARGET];
   for(int i=0; i<NUMTARGET; i++){
@@ -216,11 +218,13 @@ void main()
       color = vec4(repColor[0], 1.0);
     }
     else if(repDiff[0] >= threshold){
-      discard;
+      uint counter2 = atomicCounterIncrement(ac_frag2);
+	  discard;
     } 
     else{
+	  uint counter2 = atomicCounterIncrement(ac_frag2);
       color = reShading();
-      // color = vec4(1.0, 0.0, 0.0, 1.0);
+      //color = vec4(1.0, 0.0, 0.0, 1.0);
     }
   }
   else if(renderOption == 0){
@@ -228,9 +232,11 @@ void main()
       color = vec4(repColor[1], 1.0);
     }
     else if(repDiff[1] >= threshold){
+	  uint counter2 = atomicCounterIncrement(ac_frag2);
       discard;
     }
     else{
+	  uint counter2 = atomicCounterIncrement(ac_frag2);
       color = reShading();
       // color = vec4(0.0, 0.0, 1.0, 1.0);
     }
@@ -243,9 +249,11 @@ void main()
       color = vec4(repColor[1], 1.0);
     }
     else if(repDiff[0] >= threshold || repDiff[1] >= threshold){
+	  uint counter2 = atomicCounterIncrement(ac_frag2);
       discard;
     }
     else{
+	  uint counter2 = atomicCounterIncrement(ac_frag2);
       color = reShading();
     }
   }
@@ -271,9 +279,11 @@ void main()
       color = vec4(repColor[0], 1.0);
     }
     else if(repDiff[0] >= threshold || repDiff[1] >= threshold){
+	  uint counter2 = atomicCounterIncrement(ac_frag2);
       discard;
     }
     else{
+	  uint counter2 = atomicCounterIncrement(ac_frag2);
       color = reShading();
     }
   }
@@ -288,9 +298,11 @@ void main()
       color = vec4(repColor[2], 1.0);
     }
     else if(repDiff[0] >= threshold || repDiff[1] >= threshold || repDiff[2] >= threshold){
-      discard;
+      uint counter2 = atomicCounterIncrement(ac_frag2);
+	  discard;
     }
     else{
+	  uint counter2 = atomicCounterIncrement(ac_frag2);
       color= reShading();
     }
   }
@@ -308,9 +320,11 @@ void main()
       color = vec4(repColor[3], 1.0);
     }
     else if(repDiff[0] >= threshold || repDiff[1] >= threshold || repDiff[2] >= threshold || repDiff[3] >= threshold){
-      discard;
+     uint counter2 = atomicCounterIncrement(ac_frag2);
+	 discard;
     }
     else{
+	  uint counter2 = atomicCounterIncrement(ac_frag2);
       color= reShading();
     }
   }

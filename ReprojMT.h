@@ -46,6 +46,11 @@ public:
     void updateNumFrames(int numFrames);
     void updateQuality(bool quality);
 
+	void updateThetaPhi(float theta, float phi) {
+		_theta = theta;
+		_phi = phi;
+	}
+
 private:
     string                 _directory;
     GLWindow*              _window;
@@ -83,6 +88,9 @@ private:
     // option
 //    bool                   _useMask;
 //    int                    _useSpecular;
+	// rotation
+	float                   _theta;
+	float                   _phi;
 
     void setupPhongShader();
     void updatePhongShader(const worldViewProj& mvp);

@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
 //        reprojMT.setPath3(1, 1, 2, 200, 30, 10);
 
         //-------------------render option----------------------------------//
-        int renderOptId = 2;
+        int renderOptId =2;
         float thresholdVal = 0.0016;
         bool leftPrimary = true;
         bool enableFlip = false;
@@ -73,9 +73,63 @@ int main(int argc, char* argv[])
         bool measureQuality = true;
         reprojMT.updateQuality(measureQuality);
         reprojMT.updateRenderOption(renderOptId);
-        reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);	
+        reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);
+		reprojMT.renderReprojMT(thresholdVal, !leftPrimary, enableFlip, debug);
     }
-    if(0)
+	if (0) {
+		//-----------------------------input---------------------------------------------------------//
+		//int modelId = 0;
+		int oriResId = 5;
+		string fmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][oriResId] + ".ply";
+		string cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + ".ply";
+		string outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + "/";
+		int numFrames = 10;
+
+		int numTargets = 4;
+		ReprojMT reprojMT(WINDOWHEIGHT, WINDOWWIDTH);
+		reprojMT.init(fmodelPath, cmodelPath, numTargets, numFrames, outDir);
+		reprojMT.setPath(1, 1, 2);
+		//        reprojMT.setPath3(1, 1, 2, 200, 30, 10);
+
+		//-------------------render option----------------------------------//
+		int renderOptId = 2;
+		float thresholdVal = 0.0016;
+		bool leftPrimary = true;
+		bool enableFlip = false;
+		bool debug = false;
+		bool measureQuality = true;
+		reprojMT.updateQuality(measureQuality);
+		reprojMT.updateRenderOption(renderOptId);
+
+		vector<float> thetaList = { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120,  130, 140, 150, 160, 170, 180 };
+		vector<float> phiList = { 0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 320, 340 };
+		int numTheta = 19;
+		int numPhi = 18;
+		int numRows = numTheta * numPhi;
+		int numCols = 2 + 4;
+		vector<vector<double>> qualityTable(numRows, vector<double>(numCols, 0.0));
+		for (int i = 0; i < numTheta; i++) {
+			float theta = thetaList[i];
+			for (int j = 0; j < numPhi; j++) {
+				float phi = phiList[j];
+				reprojMT.updateThetaPhi(theta, phi);
+				auto res = reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);
+				qualityTable[i * numPhi + j][0] = theta;
+				qualityTable[i * numPhi + j][1] = phi;
+				qualityTable[i * numPhi + j][2] = res[0];
+				qualityTable[i * numPhi + j][3] = res[1];
+				res = reprojMT.renderReprojMT(thresholdVal, !leftPrimary, enableFlip, debug);
+				qualityTable[i * numPhi + j][4] = res[0];
+				qualityTable[i * numPhi + j][5] = res[1];
+			}
+		}
+		string ofileName = RESULTDIR + MODELNAMES[modelId] + "/" + MODELNAMES[modelId] + "_" + "model_rotation_renderOrder.csv";
+		cout << "save excel " << ofileName << endl;
+		ofstream ofile(ofileName);
+		write_csv(qualityTable, numRows, numCols, ofile);
+		ofile.close();
+	}
+    if(1)
     {
         //(renderOpt, threshold) -> [(PSNR, SSIM)_1k, (PSNR, SSIM)_3k, (PSNR, SSIM)_5k, (PSNR, SSIM)_10k]
         // Linear, Nearest Sampling have an effect on the result
@@ -159,7 +213,92 @@ int main(int argc, char* argv[])
 //        write_csv(qualityTable2, numRows, numCols_time, ofile);
 //        ofile.close();
     }
-	if (1)
+	if (0)
+	{
+		//(renderOpt, threshold) -> [(PSNR, SSIM)_1k, (PSNR, SSIM)_3k, (PSNR, SSIM)_5k, (PSNR, SSIM)_10k]
+		// Linear, Nearest Sampling have an effect on the result
+		// # of frames also have an effect
+		//-----------------------------input---------------------------------------------------------//
+		//int modelId = 0;
+		int coarseResId = 3, oriResId = 5;
+		string fmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][oriResId] + ".ply";
+		string cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + ".ply";
+		string outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + "/";
+		int numFrames = 300;
+		int numTargets = 4;
+
+		// resolution_threshold_renderMode_psnr_ssim_table
+		// resolution_threshold_renderMode_time_missratio_table
+		ReprojMT reprojMT(WINDOWHEIGHT, WINDOWWIDTH);
+		reprojMT.init(fmodelPath, cmodelPath, numTargets, numFrames, outDir);
+		reprojMT.setPath(1, 1, 2);
+
+		//-------------------render option----------------------------------//
+		bool leftPrimary = true;
+		bool enableFlip = false;
+		bool debug = false;
+		bool measureQuality = true;
+		reprojMT.updateQuality(measureQuality);
+
+		//parameters
+		int numCoarseModels = 6;
+		float initThreshold = 0.0002;
+		float thresholdStep = 0.0002;
+		int numThresholds = 12;
+		vector<int> renderOptions = { 0, 1, 2, 3, 4 };
+		int numRenderOption = renderOptions.size();
+		int numRows = numRenderOption * numThresholds;
+		int numCols = 2 + numCoarseModels * 3;
+		vector<vector<double>> qualityTable(numRenderOption * numThresholds, vector<double>(2 + numCoarseModels * 3, 0.0));
+		//        vector<vector<double>> qualityTable2(numRenderOption * numThresholds, vector<double>(2 + numCoarseModels * 3, 0.0));
+		for (int renderOptId = 0; renderOptId < numRenderOption; renderOptId++) {
+			int renderOption = renderOptions[renderOptId];
+			reprojMT.updateRenderOption(renderOption);
+			for (int coarseModelId = 0; coarseModelId < numCoarseModels; coarseModelId++) {
+				outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseModelId] + "/";
+				cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseModelId] + ".ply";
+				cout << "coarse model " << cmodelPath << endl;
+				reprojMT.updateCoarseModel(cmodelPath);
+				reprojMT.updateDirectory(outDir);
+				for (int i = 0; i < numThresholds; i++) {
+					float thresholdVal = initThreshold + i * thresholdStep;
+					auto res = reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);
+					qualityTable[renderOptId * numThresholds + i][0] = renderOption;
+					qualityTable[renderOptId * numThresholds + i][1] = thresholdVal;
+					qualityTable[renderOptId * numThresholds + i][2 + coarseModelId * 3] = res[0];
+					qualityTable[renderOptId * numThresholds + i][3 + coarseModelId * 3] = res[1];
+					qualityTable[renderOptId * numThresholds + i][4 + coarseModelId * 3] = res[2];
+
+					//                    qualityTable2[renderOptId * numThresholds + i][0] = renderOption;
+					//                    qualityTable2[renderOptId * numThresholds + i][1] = thresholdVal;
+					//                    qualityTable2[renderOptId * numThresholds + i][2 + coarseModelId * 3] = res[6];
+					//                    qualityTable2[renderOptId * numThresholds + i][3 + coarseModelId * 3] = res[7];
+					//                    qualityTable2[renderOptId * numThresholds + i][4 + coarseModelId * 3] = res[8];
+
+					if (1) {
+						cout << "result " << endl;
+						for (auto v : res) {
+							cout << v << " ";
+						}
+						cout << endl;
+					}
+				}
+			}
+		}
+
+		string ofileName = RESULTDIR + MODELNAMES[modelId] + "/" + MODELNAMES[modelId] + "_" + "model_threshold_renderOption_ratio.csv";
+		cout << "save excel " << ofileName << endl;
+		ofstream ofile(ofileName);
+		write_csv(qualityTable, numRows, numCols, ofile);
+		ofile.close();
+
+		//        ofileName = RESULTDIR + MODELNAMES[modelId] + "/" + MODELNAMES[modelId] + "_" + "model_threshold_renderOption_time.csv";
+		//        cout << "saving excel "<<ofileName << endl;
+		//        ofile.open(ofileName);
+		//        write_csv(qualityTable2, numRows, numCols_time, ofile);
+		//        ofile.close();
+	}
+	if (0)
 	{
 		//(renderOpt, threshold) -> [(PSNR, SSIM)_1k, (PSNR, SSIM)_3k, (PSNR, SSIM)_5k, (PSNR, SSIM)_10k]
 		// Linear, Nearest Sampling have an effect on the result

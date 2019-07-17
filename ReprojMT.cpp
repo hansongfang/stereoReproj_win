@@ -14,6 +14,8 @@ ReprojMT::ReprojMT(int width, int height)
     ,quadVAO(0)
     ,_renderOption(1)
     ,_measureQuality(true)
+	,_theta(0.0)
+	,_phi(0.0)
 {
     _window = new GLWindow(windowWidth, windowHeight);
 }
@@ -407,6 +409,7 @@ vector<float> ReprojMT::renderReprojMT(float threshold, bool leftPrimary, bool e
     }
 
     float avgPSNR = 0.0, avgSSIM = 0.0;
+	float avgMissRatio = 0.0;
     int countPSNR = 0;
     cv::Mat repMat, gdMat;
     vector<int> targetIds(_numTargets, 0); // track the reference images
@@ -440,7 +443,12 @@ vector<float> ReprojMT::renderReprojMT(float threshold, bool leftPrimary, bool e
         glBindFramebuffer(GL_FRAMEBUFFER, _cacheFBO.gBuffer);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         updateReprojMTShader(_numTargets, targetIds, curMVP);
-        _coarseA->Draw(_reprojShaderMT);
+		this->clearAtomicCounterbuffer();
+		auto res = this->readAtomicCounterbuffer();
+		_coarseA->Draw(_reprojShaderMT);
+		res = this->readAtomicCounterbuffer();
+		float tempMissRatio = (float)res.second / (float)res.first;
+		avgMissRatio += tempMissRatio;
         if (debug) {
             this->saveFigure(savePNG, frameId, thresholdDir, renderLeft);
         }
@@ -479,9 +487,10 @@ vector<float> ReprojMT::renderReprojMT(float threshold, bool leftPrimary, bool e
     if(_measureQuality){
         avgPSNR /= countPSNR;
         avgSSIM /= countPSNR;
-        cout<<"psnr "<<avgPSNR<<" ssim "<<avgSSIM<<endl;
+		avgMissRatio /= countPSNR;
+        cout<<"psnr "<<avgPSNR<<" ssim "<<avgSSIM<<" missratio "<<avgMissRatio<<endl;
     }
-    return vector<float>{avgPSNR, avgSSIM};
+    return vector<float>{avgPSNR, avgSSIM, avgMissRatio};
 }
 
 void ReprojMT::saveFigure(bool savePNG, int frameId, const string &thresholdDir, bool renderLeft)
@@ -540,11 +549,11 @@ void ReprojMT::setMVP(int frameId, bool left, worldViewProj& mvp)
     glm::mat4 trans = glm::translate(glm::mat4(1.0), glm::vec3(translateX, 0.0f, 0.0f));
     //mvp.modelWorld = glm::rotate(trans, glm::radians(curDegree), glm::vec3(0.0, 1.0, 0.0));
 	/*float theta = 0 * PI / 180.0 ;
-	float phi = 30 * PI / 180.0;
-	float y = cos(theta);
-	float x = sin(theta) * sin(phi);
-	float z = sin(theta) * cos(phi);*/
-	mvp.modelWorld = glm::rotate(trans, curDegree, glm::vec3(0.0, 1.0, 0.0));
+	float phi = 0 * PI / 180.0;*/
+	float y = cos(_theta);
+	float x = sin(_theta) * sin(_phi);
+	float z = sin(_theta) * cos(_phi);
+	mvp.modelWorld = glm::rotate(trans, curDegree, glm::vec3(x, y, z));
 }
 
 // set path
@@ -694,6 +703,6 @@ pair<GLuint, GLuint> ReprojMT::readAtomicCounterbuffer()
     glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, _atomicBufferID);
     glGetBufferSubData(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint)*2, &userCounter);
     glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
-    printf("redPixels: %u %u\n", userCounter[0], userCounter[1]);
+    //printf("redPixels: %u %u\n", userCounter[0], userCounter[1]);
     return std::make_pair(userCounter[0], userCounter[1]);
 }
