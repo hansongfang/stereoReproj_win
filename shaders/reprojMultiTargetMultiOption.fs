@@ -130,10 +130,10 @@ vec3 noise_diffuse()
 {
     float time = 1.0;
     vec3 v = vec3(2.0 * v_texCoord3D.xyz * (2.0 + sin(0.5*2.0)));  
-    v = v * 10.0;
+    v = v * 12.0;
     float n = cnoise(v);
     // vec3 color = 0.5 + 0.3 * vec3(n, n, n);
-    vec3 color = 0.8 + 0.1 * vec3(n, n, n);
+    vec3 color = 0.8 + 0.15 * vec3(n, n, n);
     return color;
 }
 
