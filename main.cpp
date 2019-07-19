@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
                                 "Armadillo25k_o", "Armadillo35k" };
     MODELS[3] = vector<string>{ "bunny1k_o", "bunny3k_o", "bunny5k_o", "bunny10k_o", "bunny25k_o", "bunny70k" };
 
-    if(0){
+    if(1){
         //-----------------------------input---------------------------------------------------------//
         //int modelId = 0;
 		int oriResId = 5;
@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
         ReprojMT reprojMT(WINDOWHEIGHT, WINDOWWIDTH);
         reprojMT.init(fmodelPath, cmodelPath, numTargets, numFrames, outDir);
         reprojMT.setPath(1, 1, 2);
-//        reprojMT.setPath3(1, 1, 2, 200, 30, 10);
+        //reprojMT.setPath3(1, 1, 2, 200, 30, 10);
 
         //-------------------render option----------------------------------//
         int renderOptId =2;
@@ -74,7 +74,7 @@ int main(int argc, char* argv[])
         reprojMT.updateQuality(measureQuality);
         reprojMT.updateRenderOption(renderOptId);
         reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);
-		reprojMT.renderReprojMT(thresholdVal, !leftPrimary, enableFlip, debug);
+		//reprojMT.renderReprojMT(thresholdVal, !leftPrimary, enableFlip, debug);
     }
 	if (0) {
 		//-----------------------------input---------------------------------------------------------//
@@ -129,7 +129,7 @@ int main(int argc, char* argv[])
 		write_csv(qualityTable, numRows, numCols, ofile);
 		ofile.close();
 	}
-    if(1)
+    if(0)
     {
         //(renderOpt, threshold) -> [(PSNR, SSIM)_1k, (PSNR, SSIM)_3k, (PSNR, SSIM)_5k, (PSNR, SSIM)_10k]
         // Linear, Nearest Sampling have an effect on the result
