@@ -129,7 +129,13 @@ void main()
 {
   // Perlin noise diffuse layer
   // use noise as material color for ambient color and diffuse calculation
-  vec3 noise_color = noise_diffuse();
+  vec3 targetPos_ndc = vec3(targetPos.x, targetPos.y, targetPos.z) / targetPos.w;
+  vec3 noise_coord = (targetPos_ndc + 1.0 ) / 2.0 * 20.0; //scale
+
+  float n = cnoise(noise_coord);
+  vec3 noise_color = 0.8 + 0.1 * vec3(n, n, n);
+
+  //vec3 noise_color = noise_diffuse();
 
 	color = vec4(uAmbientLightColor * noise_color, 1.0);
 
@@ -147,7 +153,6 @@ void main()
 		}
 	}
 
-  vec3 targetPos_ndc = vec3(targetPos.x, targetPos.y, targetPos.z) / targetPos.w;
   float fragDepth = (targetPos_ndc.z + 1.0) / 2.0;
 	color.a = fragDepth;
   color.a = 1.0;
