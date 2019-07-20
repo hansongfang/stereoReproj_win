@@ -371,7 +371,7 @@ void ReprojMT::updateReprojMTShader(int numTarget, const vector<int>& targetIds,
 vector<float> ReprojMT::renderReprojMT(float threshold, bool leftPrimary, bool enableFlip, bool debug)
 {
     bool savePNG = true;
-    bool usePhong = true;
+    bool usePhong = false;
     _measureQuality = true;
     float thresholdId = threshold / 0.0001;
     string thresholdDir = _directory + to_string(int(round(thresholdId))) + "/";
@@ -584,20 +584,21 @@ void ReprojMT::setModelRotateYPath(int rotatePeriod, int option)
     _modelRotateYPath.clear();
     _modelRotateYPath.resize(_numFrames, 0.0);
 
+	float initRotateY = 180.0f;
     float stepRotateY = 360.0f / rotatePeriod;
     if (option == 1) {
         for (int i = 0; i < _numFrames; i++) {
-            _modelRotateYPath[i] = i * stepRotateY;
+            _modelRotateYPath[i] = i * stepRotateY + initRotateY;
         }
     }
     else if (option == 2) {
         for (int i = 0; i < _numFrames; i++) {
-            _modelRotateYPath[i] = 0 * stepRotateY;
+            _modelRotateYPath[i] = 0 * stepRotateY + initRotateY;
         }
     }
     else if (option == 3) {
         for (int i = 0; i < _numFrames; i++) {
-            _modelRotateYPath[i] = -i * stepRotateY;
+            _modelRotateYPath[i] = -i * stepRotateY + initRotateY;
         }
     }
 }
