@@ -368,6 +368,81 @@ void ReprojMT::updateReprojMTShader(int numTarget, const vector<int>& targetIds,
     }
 }
 
+vector<float> ReprojMT::oneEyeOneRefCacheReuse(int freshCount, float threshold, bool leftPrimary, bool debug)
+{
+    // every (render/reproj) is written to targetFBO, reproj from old targetFBO
+    // targetFBO & targetMVP
+
+    bool savePNG = true;
+    bool usePhong = false;
+    _measureQuality = true;
+    float thresholdId = threshold / 0.0001;
+    string thresholdDir = _directory + to_string(int(round(thresholdId))) + "/";
+    cout <<"save result in "<< thresholdDir << endl;
+    cout<<"use render option "<<_renderOption<<endl;
+
+    assert _numTargets == 2;
+    assert _renderOption == 1;
+    
+    _reprojShaderMT.use();
+    _reprojShaderMT.setFloat("threshold", threshold);
+    _reprojShaderMT.setFloat("epsilon", -0.0002);
+    _reprojShaderMT.setBool("usePhong", usePhong);
+
+    bool renderLeft = leftPrimary;
+    // prepare first frame 
+    for(int frameId =0; frameId < 1; frameId ++){
+        int curId = frameId;
+        setMVP(frameId, renderLeft, _targetMVPS[curId]);
+        glBindFramebuffer(GL_FRAMEBUFFER, _targetFBOS[curId].gBuffer);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        if(usePhong){
+            updatePhongShader(_targetMVPS[curId]);
+            _a->Draw(_phongShader);
+        }
+        else{
+            updateNoiseShader(_targetMVPS[curId]);
+            _a->Draw(_noiseShader);
+        }
+        if (debug) {
+            this->saveFigure(savePNG, frameId, thresholdDir, renderLeft);
+        }
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    // start
+    float avgPSNR = 0.0, avgSSIM = 0.0;
+	float avgMissRatio = 0.0;
+    int countPSNR = 0;
+    cv::Mat repMat, gdMat;
+    vector<int> targetIds(_numTargets, 0); // track the reference images  
+    int count = freshCount; // reduce 1 when reproj, when 0 render  
+    for(int frameId =1; frameId < _numFrames; frameId ++){
+        curId = frameId % period
+        // reproj/render -> to which FBO & MVP
+
+        if(count == 0){
+            // render
+            count = freshCount;
+        }
+        else{
+            // reproj
+            string temp;
+            for (int i = 0; i < _numTargets; i++) {
+                targetIds[i] = (curId - i) % _numTargets;
+                temp += to_string(targetIds[i])+" ";
+            }
+        }
+        // reproj -> to which FBO & MVP
+        glBindFramebuffer();
+        setMVP();
+        _coarseA->Draw();
+        glBindFramebuffer();
+
+        // when fresh 
+    }
+}
+
 vector<float> ReprojMT::renderReprojMT(float threshold, bool leftPrimary, bool enableFlip, bool debug)
 {
     bool savePNG = true;

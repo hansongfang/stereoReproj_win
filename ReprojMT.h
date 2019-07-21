@@ -37,6 +37,9 @@ public:
 
     vector<float> renderReprojMT(float threshold, bool leftPrimary, bool enableFlip,
         bool debug = false);
+    
+    vector<float> oneEyeOneRefCacheReuse(int freshCount, 
+    float threshold, bool leftPrimary, bool debug);
 
     void updateModels(string fMeshPath, string cMeshPath);
     void updateCoarseModel(string cMeshPath);

@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
                                 "Armadillo25k_o", "Armadillo35k" };
     MODELS[3] = vector<string>{ "bunny1k_o", "bunny3k_o", "bunny5k_o", "bunny10k_o", "bunny25k_o", "bunny70k" };
 
-    if(1){
+    if(0){
         //-----------------------------input---------------------------------------------------------//
         //int modelId = 0;
 		int oriResId = 5;
@@ -76,6 +76,31 @@ int main(int argc, char* argv[])
         reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);
 		//reprojMT.renderReprojMT(thresholdVal, !leftPrimary, enableFlip, debug);
     }
+	if(1){
+		// test oneEyeOneCacheReuse, render->cache1, cache1->cache2, render, ...
+		int oriResId = 5;
+        string fmodelPath = MODELDIR + MODELNAMES[modelId] +"/"+ MODELS[modelId][oriResId]+".ply";
+        string cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + ".ply";
+        string outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + "/";
+        int numFrames = 30;
+
+		int numTargets = 3;
+		int freshCount = 2;
+		ReprojMT reprojMT(WINDOWHEIGHT, WINDOWWIDTH);
+        reprojMT.init(fmodelPath, cmodelPath, numTargets, numFrames, outDir);
+        reprojMT.setPath(1, 1, 2);
+
+		//-------------------render option----------------------------------//
+        int renderOptId =1;
+        float thresholdVal = 0.0016;
+        bool leftPrimary = true;
+        bool debug = true;
+        bool measureQuality = true;
+		reprojMT.updateQuality(measureQuality);
+        reprojMT.updateRenderOption(renderOptId);
+		reprojMT.oneEyeOneRefCacheReuse(freshCount, thresholdVal, leftPrimary, debug);
+
+	}
 	if (0) {
 		//-----------------------------input---------------------------------------------------------//
 		//int modelId = 0;
