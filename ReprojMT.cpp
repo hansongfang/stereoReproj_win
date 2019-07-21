@@ -417,7 +417,7 @@ vector<float> ReprojMT::oneEyeOneRefCacheReuse(int freshCount, float threshold, 
 	float avgMissRatio = 0.0;
     int countPSNR = 0;
     cv::Mat repMat, gdMat;
-    vector<int> targetIds(_numTargets, 0); // track the reference images  
+    vector<int> targetIds(numRef, 0); // track the reference images  
     int count = freshCount; // reduce 1 when reproj, when 0 render  
     for(int frameId = numRef; frameId < _numFrames; frameId ++){
         int curId = frameId % _numTargets;
@@ -449,10 +449,12 @@ vector<float> ReprojMT::oneEyeOneRefCacheReuse(int freshCount, float threshold, 
                 targetIds[i] = (curId - i) % _numTargets;
                 temp += to_string(targetIds[i])+" ";
             }
+            cout<<"curId: "<<curId<<" refId: "<<temp<<endl;
 
             setMVP(frameId, renderLeft, _targetMVPS[curId]);
             glBindFramebuffer(GL_FRAMEBUFFER, _targetFBOS[curId].gBuffer);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            updateReprojMTShader(numRef, targetIds, _targetMVPS[curId]);
             _coarseA->Draw(_reprojShaderMT);
             if (debug) {
                 this->saveFigure(savePNG, frameId, thresholdDir, renderLeft);
