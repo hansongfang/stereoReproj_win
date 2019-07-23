@@ -15,8 +15,8 @@
 using namespace std;
 
 string SHADERPATH = "G:/vr/stereoReproj/shaders/";
-const int WINDOWHEIGHT = 840;
-const int WINDOWWIDTH = 939;
+const int WINDOWWIDTH = 960;
+const int WINDOWHEIGHT = 1080;
 
 int main(int argc, char* argv[])
 {
@@ -40,7 +40,8 @@ int main(int argc, char* argv[])
 
     //CONSTANTS
     string MODELDIR = "G:/PLY/";
-    string RESULTDIR = "G:/vr/stereoReproj/Results/";
+    //string RESULTDIR = "G:/vr/stereoReproj/Results/";
+	string RESULTDIR = "G:/Dropbox/stereoRepoj/Results/";
     vector<string> MODELNAMES = {"Lucy", "angel", "Armadillo", "bunny"};
     map<int, vector<string>> MODELS;
     MODELS[0] = vector<string>{ "Lucy1k_o", "Lucy3k_o", "Lucy5k_o", "Lucy10k_o", "Lucy25k_o", "Lucy100k" };
@@ -59,7 +60,7 @@ int main(int argc, char* argv[])
         int numFrames = 30;
 
         int numTargets = 4;
-        ReprojMT reprojMT(WINDOWHEIGHT, WINDOWWIDTH);
+        ReprojMT reprojMT(WINDOWWIDTH, WINDOWHEIGHT);
         reprojMT.init(fmodelPath, cmodelPath, numTargets, numFrames, outDir);
         reprojMT.setPath(1, 1, 2);
         //reprojMT.setPath3(1, 1, 2, 200, 30, 10);
@@ -82,13 +83,14 @@ int main(int argc, char* argv[])
         string fmodelPath = MODELDIR + MODELNAMES[modelId] +"/"+ MODELS[modelId][oriResId]+".ply";
         string cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + ".ply";
         string outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + "/";
-        int numFrames = 30;
+        int numFrames = 100;
 
-		int numTargets = 3;
-		int freshCount = 2;
-		ReprojMT reprojMT(WINDOWHEIGHT, WINDOWWIDTH);
+		int numTargets = 2;
+		int freshCount = 1;
+		ReprojMT reprojMT(WINDOWWIDTH, WINDOWHEIGHT);
         reprojMT.init(fmodelPath, cmodelPath, numTargets, numFrames, outDir);
         reprojMT.setPath(1, 1, 2);
+		//reprojMT.setPath3(1, 1, 2, 200, 300, 200);
 
 		//-------------------render option----------------------------------//
         int renderOptId =1;
@@ -98,7 +100,17 @@ int main(int argc, char* argv[])
         bool measureQuality = true;
 		reprojMT.updateQuality(measureQuality);
         reprojMT.updateRenderOption(renderOptId);
-		reprojMT.oneEyeOneRefCacheReuse(freshCount, thresholdVal, leftPrimary, debug);
+		//reprojMT.oneEyeOneRefCacheReuse(freshCount, thresholdVal, leftPrimary, debug);
+		
+		int numCoarseModels = 6;
+		for (int coarseModelId = 0; coarseModelId < numCoarseModels; coarseModelId++) {
+			outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseModelId] + "/";
+			cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseModelId] + ".ply";
+			cout << "coarse model " << cmodelPath << endl;
+			reprojMT.updateCoarseModel(cmodelPath);
+			reprojMT.updateDirectory(outDir);
+			reprojMT.oneEyeOneRefCacheReuse(freshCount, thresholdVal, leftPrimary, debug);
+		}
 
 	}
 	if (0) {
@@ -111,7 +123,7 @@ int main(int argc, char* argv[])
 		int numFrames = 10;
 
 		int numTargets = 4;
-		ReprojMT reprojMT(WINDOWHEIGHT, WINDOWWIDTH);
+		ReprojMT reprojMT(WINDOWWIDTH, WINDOWHEIGHT);
 		reprojMT.init(fmodelPath, cmodelPath, numTargets, numFrames, outDir);
 		reprojMT.setPath(1, 1, 2);
 		//        reprojMT.setPath3(1, 1, 2, 200, 30, 10);
@@ -170,7 +182,7 @@ int main(int argc, char* argv[])
 
         // resolution_threshold_renderMode_psnr_ssim_table
         // resolution_threshold_renderMode_time_missratio_table
-        ReprojMT reprojMT(WINDOWHEIGHT, WINDOWWIDTH);
+        ReprojMT reprojMT(WINDOWWIDTH, WINDOWHEIGHT);
         reprojMT.init(fmodelPath, cmodelPath, numTargets, numFrames, outDir);
         reprojMT.setPath(1, 1, 2);
 
@@ -254,7 +266,7 @@ int main(int argc, char* argv[])
 
 		// resolution_threshold_renderMode_psnr_ssim_table
 		// resolution_threshold_renderMode_time_missratio_table
-		ReprojMT reprojMT(WINDOWHEIGHT, WINDOWWIDTH);
+		ReprojMT reprojMT(WINDOWWIDTH, WINDOWHEIGHT);
 		reprojMT.init(fmodelPath, cmodelPath, numTargets, numFrames, outDir);
 		reprojMT.setPath(1, 1, 2);
 
@@ -420,7 +432,7 @@ int main(int argc, char* argv[])
         int numFrames = 200;
 
         int numTargets = 3;
-        ReprojMT reprojMT(WINDOWHEIGHT, WINDOWWIDTH);
+        ReprojMT reprojMT(WINDOWWIDTH, WINDOWHEIGHT);
         reprojMT.init(fmodelPath, cmodelPath, numTargets, numFrames, outDir);
         reprojMT.setPath(1, 1, 2);
 
@@ -488,7 +500,7 @@ int main(int argc, char* argv[])
         int numFrames = 10;
 
         int numTargets = 3;
-        ReprojMT reprojMT(WINDOWHEIGHT, WINDOWWIDTH);
+        ReprojMT reprojMT(WINDOWWIDTH, WINDOWHEIGHT);
         reprojMT.init(fmodelPath, cmodelPath, numTargets, numFrames, outDir);
 //        reprojMT.setPath(1, 1, 2);
 
