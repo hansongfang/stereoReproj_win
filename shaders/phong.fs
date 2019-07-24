@@ -5,7 +5,7 @@ in vec3 vFragPos;
 in vec3 vNormal;
 in vec3 vLightPos;
 
-out vec4 targetPos;
+in vec4 targetPos;
 
 uniform vec3 uMaterialColor;
 uniform vec3 uSpecularColor;
