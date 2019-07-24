@@ -61,6 +61,7 @@ void ReprojMT::init(string fMeshPath, string cMeshPath, int numTargets, int numF
 
     // Opengl Global setting
     glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+	glViewport(0, 0, windowWidth, windowHeight);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
     glEnable(GL_CULL_FACE);
@@ -376,14 +377,14 @@ vector<float> ReprojMT::oneEyeOneRefCacheReuse(int freshCount, float threshold, 
     // targetFBO & targetMVP
     int numRef = 1;
     bool savePNG = true;
-    bool usePhong = false;
+    bool usePhong = true;
     _measureQuality = true;
     float thresholdId = threshold / 0.0001;
     string thresholdDir = _directory + to_string(int(round(thresholdId))) + "/";
     cout <<"save result in "<< thresholdDir<< endl;
     cout<<"use render option "<<_renderOption<<endl;
 
-    assert(_numTargets == 3);
+    assert(_numTargets == 2);
     assert(_renderOption == 1);
     
     _reprojShaderMT.use();
@@ -397,6 +398,7 @@ vector<float> ReprojMT::oneEyeOneRefCacheReuse(int freshCount, float threshold, 
         int curId = frameId;
         setMVP(frameId, renderLeft, _targetMVPS[curId]);
         glBindFramebuffer(GL_FRAMEBUFFER, _targetFBOS[curId].gBuffer);
+		glViewport(0, 0, windowWidth, windowHeight);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         if(usePhong){
             updatePhongShader(_targetMVPS[curId]);
@@ -423,9 +425,11 @@ vector<float> ReprojMT::oneEyeOneRefCacheReuse(int freshCount, float threshold, 
         int curId = frameId % _numTargets;
         // reproj/render -> to which FBO & MVP
         if(count == 0){
+			cout << "render " << curId << endl;
             // when fresh 
             setMVP(frameId, renderLeft, _targetMVPS[curId]);
             glBindFramebuffer(GL_FRAMEBUFFER, _targetFBOS[curId].gBuffer);
+			glViewport(0, 0, windowWidth, windowHeight);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             if(usePhong){
                 updatePhongShader(_targetMVPS[curId]);
@@ -446,13 +450,14 @@ vector<float> ReprojMT::oneEyeOneRefCacheReuse(int freshCount, float threshold, 
             // reproj
             string temp;
             for (int i = 1; i <= numRef; i++) {
-                targetIds[i] = (curId - i) % _numTargets;
+                targetIds[i] = (curId - i + _numTargets) % _numTargets;
                 temp += to_string(targetIds[i])+" ";
             }
             cout<<"curId: "<<curId<<" refId: "<<temp<<endl;
 
             setMVP(frameId, renderLeft, _targetMVPS[curId]);
             glBindFramebuffer(GL_FRAMEBUFFER, _targetFBOS[curId].gBuffer);
+			glViewport(0, 0, windowWidth, windowHeight);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             updateReprojMTShader(numRef, targetIds, _targetMVPS[curId]);
             _coarseA->Draw(_reprojShaderMT);
@@ -465,6 +470,8 @@ vector<float> ReprojMT::oneEyeOneRefCacheReuse(int freshCount, float threshold, 
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
             if(_measureQuality){
+				glBindFramebuffer(GL_FRAMEBUFFER, _renderFBO.gBuffer);
+				glViewport(0, 0, windowWidth, windowHeight);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
                 if(usePhong){
                     updatePhongShader(_targetMVPS[curId]);
@@ -474,13 +481,14 @@ vector<float> ReprojMT::oneEyeOneRefCacheReuse(int freshCount, float threshold, 
                     updateNoiseShader(_targetMVPS[curId]);
                     _a->Draw(_noiseShader);
                 }
-                _window->aftRender();
+                //_window->aftRender();
                 if(debug){
                     this->saveGTFigure(savePNG, frameId, thresholdDir, renderLeft);
                 }
                 auto gdBuffer = _window->getFrameBuffer();
                 gdMat = cv::Mat(windowHeight, windowWidth, CV_8UC3, &gdBuffer[0]);
                 cv::flip(gdMat, gdMat, 0);
+				glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
                 auto quality = _quality.computeQualityMat(repMat, gdMat);
                 avgPSNR += quality.second;
