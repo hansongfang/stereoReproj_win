@@ -191,8 +191,8 @@ vec4 reprojColor(vec4 targetPos, TargetTexture tts)
   vec2 targetCoord = (vec2(targetPos_ndc.x, targetPos_ndc.y) + vec2(1.0)) / 2.0;
   vec4 tempColor = texture2D(tts.tDiffuse, targetCoord);
   vec3 repColor = tempColor.rgb;
-  //float repDepth = tempColor.a;
-  float repDepth = texture2D(tts.tDepth, targetCoord).r;
+  float repDepth = tempColor.a;
+  //float repDepth = texture2D(tts.tDepth, targetCoord).r;
 
   float fragDepth = (targetPos_ndc.z + 1.0) / 2.0;
   repDepth = LinearizeDepth(repDepth);
