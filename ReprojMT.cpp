@@ -60,7 +60,7 @@ void ReprojMT::init(string fMeshPath, string cMeshPath, int numTargets, int numF
     setupCacheFBO();
 
     // Opengl Global setting
-    glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // set depth at farthest 
 	glViewport(0, 0, windowWidth, windowHeight);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
