@@ -34,5 +34,5 @@ void main()
 
 	vec3 targetPos_ndc = vec3(targetPos.x, targetPos.y, targetPos.z) / targetPos.w;
   	float fragDepth = (targetPos_ndc.z + 1.0) / 2.0;
-	color.a = fragDepth;
+	color.w = fragDepth;
 }
