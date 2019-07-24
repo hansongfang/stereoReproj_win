@@ -24,9 +24,14 @@ out vec3 vLightPos;
 // noise
 out vec3 v_texCoord3D;
 
+// saving depth
+out vec4 fragPos;
+
 void main()
 {
     gl_Position = curFullTransform * vec4(pos, 1.0);
+    fragPos = gl_Position;
+    
     for(int i=0; i<NUMTARGET; i++){
         targetPos[i] = cacheFullTransform[i] * vec4(pos, 1.0);
     }

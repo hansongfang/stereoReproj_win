@@ -346,6 +346,7 @@ void ReprojMT::updateReprojMTShader(int numTarget, const vector<int>& targetIds,
     auto invTransModelView = glm::inverseTranspose(modelView);
     _reprojShaderMT.setMat4("invTransModelView", (float*)&invTransModelView[0][0]);
     _reprojShaderMT.setMat4("curWorldView", (float*) &(curMVP.worldView[0][0]));
+    glm::mat4 curFullTrans = curMVP.Projection * curMVP.worldView * curMVP.modelWorld;// can later copy from fullTransform
 
     int count = 0;
     string temp;
@@ -354,6 +355,12 @@ void ReprojMT::updateReprojMTShader(int numTarget, const vector<int>& targetIds,
         auto fullTransform = _targetMVPS[targetId].Projection * _targetMVPS[targetId].worldView * _targetMVPS[targetId].modelWorld;
         temp = "cacheFullTransform[" + to_string(i) + "]";
         _reprojShaderMT.setMat4(temp, (float*)&fullTransform[0][0]);
+
+        // caching depth
+        glm::mat4 temp2 = glm::inverse(fullTransform);
+        glm::mat4 cacheTrans = curFullTrans * temp2;
+        temp = "curCamInvTargetCam[" + to_string(i) + "]";
+        _reprojShaderMT.setMat4(temp, (float*) &(cacheTrans[0][0]));
 
         // set textures
         glActiveTexture(GL_TEXTURE0+count);

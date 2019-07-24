@@ -28,6 +28,10 @@ uniform float uKd;
 // noise
 in vec3 v_texCoord3D;
 
+// caching depth in current view
+in vec4 fragPos;
+uniform mat4 curCamInvTargetCam[NUMTARGET];
+
 layout(binding=0, offset=0) uniform atomic_uint ac_frag;
 layout(binding=0, offset=4) uniform atomic_uint ac_frag2;
 
@@ -185,7 +189,7 @@ float LinearizeDepth(float z)
   return (2.0*n)/(f+n -z*(f-n)); // convert from [-n, -f] to [n/f, 1.0]
 }
 
-vec4 reprojColor(vec4 targetPos, TargetTexture tts)
+vec4 reprojColor(vec4 targetPos, TargetTexture tts, const in mat4 transMat, inout float cachingDepth)
 {
   vec3 targetPos_ndc = vec3(targetPos.x, targetPos.y, targetPos.z) / targetPos.w;
   vec2 targetCoord = (vec2(targetPos_ndc.x, targetPos_ndc.y) + vec2(1.0)) / 2.0;
@@ -195,6 +199,27 @@ vec4 reprojColor(vec4 targetPos, TargetTexture tts)
   //float repDepth = texture2D(tts.tDepth, targetCoord).r;
 
   float fragDepth = (targetPos_ndc.z + 1.0) / 2.0;
+
+  // cachingDepth
+  float C5 = -1.002002002002002;
+  float C6 = -0.20020020020020018;
+  float zn = targetPos_ndc.z;
+  float zn_new = repDepth * 2.0 - 1.0;
+  float ze = C6 / (-zn - C5);
+  float ze_new = C6/(-zn_new - C5);
+  float wc = - ze;
+  float wc_new = - ze_new;
+  //float zc = zn * wc;
+  float zc_new = zn_new * wc_new;
+  float scale = wc_new / wc;
+  float xc_new = scale * targetPos.x;
+  float yc_new = scale *targetPos.y;
+  // float xc_new = targetPos.x;
+  // float yc_new = targetPos.y;
+  // float wc_new = targetPods.z;
+  vec4 cachingTargetPos = transMat * vec4(xc_new, yc_new, zc_new, wc_new);
+  cachingDepth = (cachingTargetPos.z / cachingTargetPos.w + 1.0)/2.0;
+
   repDepth = LinearizeDepth(repDepth);
   fragDepth = LinearizeDepth(fragDepth);
   float repDiff = repDepth - fragDepth;
@@ -207,23 +232,31 @@ void main()
 
   vec3 repColor[NUMTARGET];
   float repDiff[NUMTARGET];
+  float cachingDepth[NUMTARGET];// depth from caching z
+
   for(int i=0; i<NUMTARGET; i++){
-    vec4 temp = reprojColor(targetPos[i], tts[i]);
+    vec4 temp = reprojColor(targetPos[i], tts[i], curCamInvTargetCam[i], cachingDepth[i]);
     repColor[i] = temp.rgb;
     repDiff[i] = temp.a;
   }
 
+  vec3 fragPos_ndc = vec3(fragPos.x, fragPos.y, fragPos.z) / fragPos.w;
+  float fragDepth = (fragPos_ndc.z + 1.0) / 2.0;
+
+
   if(renderOption == 1){
     if(repDiff[0] < threshold && repDiff[0] > epsilon){
       color = vec4(repColor[0], 1.0);
+      color.w = fragDepth;
     }
     else if(repDiff[0] >= threshold){
       uint counter2 = atomicCounterIncrement(ac_frag2);
-	  discard;
+	    discard;
     } 
     else{
 	  uint counter2 = atomicCounterIncrement(ac_frag2);
       color = reShading();
+      color.w = fragDepth;
       //color = vec4(0.0, 1.0, 0.0, 1.0);
     }
   }
