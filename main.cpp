@@ -85,8 +85,8 @@ int main(int argc, char* argv[])
         string outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + "/";
         int numFrames = 100;
 
-		int numTargets = 2;
-		int freshCount = 1;
+		int numTargets = 3;
+		int freshCount = 2;
 		ReprojMT reprojMT(WINDOWWIDTH, WINDOWHEIGHT);
         reprojMT.init(fmodelPath, cmodelPath, numTargets, numFrames, outDir);
         reprojMT.setPath(1, 1, 2);

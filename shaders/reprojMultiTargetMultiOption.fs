@@ -224,7 +224,7 @@ void main()
     else{
 	  uint counter2 = atomicCounterIncrement(ac_frag2);
       color = reShading();
-      color = vec4(0.0, 1.0, 0.0, 1.0);
+      //color = vec4(0.0, 1.0, 0.0, 1.0);
     }
   }
   else if(renderOption == 0){

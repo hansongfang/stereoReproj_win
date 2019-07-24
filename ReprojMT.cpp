@@ -384,7 +384,7 @@ vector<float> ReprojMT::oneEyeOneRefCacheReuse(int freshCount, float threshold, 
     cout <<"save result in "<< thresholdDir<< endl;
     cout<<"use render option "<<_renderOption<<endl;
 
-    assert(_numTargets == 2);
+    assert(_numTargets == 3);
     assert(_renderOption == 1);
     
     _reprojShaderMT.use();
