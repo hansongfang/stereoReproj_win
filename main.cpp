@@ -100,9 +100,9 @@ int main(int argc, char* argv[])
         bool measureQuality = true;
 		reprojMT.updateQuality(measureQuality);
         reprojMT.updateRenderOption(renderOptId);
-		//reprojMT.oneEyeOneRefCacheReuse(freshCount, thresholdVal, leftPrimary, debug);
+		reprojMT.oneEyeOneRefCacheReuse(freshCount, thresholdVal, leftPrimary, debug);
 		
-		int numCoarseModels = 6;
+		/*int numCoarseModels = 6;
 		for (int coarseModelId = 0; coarseModelId < numCoarseModels; coarseModelId++) {
 			outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseModelId] + "/";
 			cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseModelId] + ".ply";
@@ -110,7 +110,7 @@ int main(int argc, char* argv[])
 			reprojMT.updateCoarseModel(cmodelPath);
 			reprojMT.updateDirectory(outDir);
 			reprojMT.oneEyeOneRefCacheReuse(freshCount, thresholdVal, leftPrimary, debug);
-		}
+		}*/
 
 	}
 	if (0) {
