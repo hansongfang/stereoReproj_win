@@ -15,8 +15,10 @@
 using namespace std;
 
 string SHADERPATH = "G:/vr/stereoReproj/shaders/";
-const int WINDOWHEIGHT = 840;
-const int WINDOWWIDTH = 939;
+//const int WINDOWWIDTH = 840;
+//const int WINDOWHEIGHT = 939;
+const int WINDOWWIDTH = 960;
+const int WINDOWHEIGHT = 1080;
 
 int main(int argc, char* argv[])
 {
@@ -59,7 +61,7 @@ int main(int argc, char* argv[])
         int numFrames = 30;
 
         int numTargets = 4;
-        ReprojMT reprojMT(WINDOWHEIGHT, WINDOWWIDTH);
+        ReprojMT reprojMT(WINDOWWIDTH, WINDOWHEIGHT);
         reprojMT.init(fmodelPath, cmodelPath, numTargets, numFrames, outDir);
         reprojMT.setPath(1, 1, 2);
         //reprojMT.setPath3(1, 1, 2, 200, 30, 10);
@@ -86,7 +88,7 @@ int main(int argc, char* argv[])
 		int numFrames = 10;
 
 		int numTargets = 4;
-		ReprojMT reprojMT(WINDOWHEIGHT, WINDOWWIDTH);
+		ReprojMT reprojMT(WINDOWWIDTH, WINDOWHEIGHT);
 		reprojMT.init(fmodelPath, cmodelPath, numTargets, numFrames, outDir);
 		reprojMT.setPath(1, 1, 2);
 		//        reprojMT.setPath3(1, 1, 2, 200, 30, 10);
@@ -145,7 +147,7 @@ int main(int argc, char* argv[])
 
         // resolution_threshold_renderMode_psnr_ssim_table
         // resolution_threshold_renderMode_time_missratio_table
-        ReprojMT reprojMT(WINDOWHEIGHT, WINDOWWIDTH);
+        ReprojMT reprojMT(WINDOWWIDTH, WINDOWHEIGHT);
         reprojMT.init(fmodelPath, cmodelPath, numTargets, numFrames, outDir);
         reprojMT.setPath(1, 1, 2);
 
@@ -201,7 +203,7 @@ int main(int argc, char* argv[])
             }
         }
 
-        string ofileName = RESULTDIR + MODELNAMES[modelId] + "/" + MODELNAMES[modelId] + "_" + "model_threshold_renderOption.csv";
+        string ofileName = RESULTDIR + MODELNAMES[modelId] + "/" + MODELNAMES[modelId] + "_" + "model_threshold_renderOption2.csv";
         cout <<"save excel " <<ofileName << endl;
         ofstream ofile(ofileName);
         write_csv(qualityTable, numRows, numCols, ofile);
@@ -229,7 +231,7 @@ int main(int argc, char* argv[])
 
 		// resolution_threshold_renderMode_psnr_ssim_table
 		// resolution_threshold_renderMode_time_missratio_table
-		ReprojMT reprojMT(WINDOWHEIGHT, WINDOWWIDTH);
+		ReprojMT reprojMT(WINDOWWIDTH, WINDOWHEIGHT);
 		reprojMT.init(fmodelPath, cmodelPath, numTargets, numFrames, outDir);
 		reprojMT.setPath(1, 1, 2);
 
@@ -314,7 +316,7 @@ int main(int argc, char* argv[])
 
 		// resolution_threshold_renderMode_psnr_ssim_table
 		// resolution_threshold_renderMode_time_missratio_table
-		ReprojMT reprojMT(WINDOWHEIGHT, WINDOWWIDTH);
+		ReprojMT reprojMT(WINDOWWIDTH, WINDOWHEIGHT);
 		reprojMT.init(fmodelPath, cmodelPath, numTargets, numFrames, outDir);
 		reprojMT.setPath(1, 1, 2);
 		reprojMT.setPath3(1, 1, 2, 200, 60, numFrames);// comment this if do not want a faster version
@@ -395,7 +397,7 @@ int main(int argc, char* argv[])
         int numFrames = 200;
 
         int numTargets = 3;
-        ReprojMT reprojMT(WINDOWHEIGHT, WINDOWWIDTH);
+        ReprojMT reprojMT(WINDOWWIDTH, WINDOWHEIGHT);
         reprojMT.init(fmodelPath, cmodelPath, numTargets, numFrames, outDir);
         reprojMT.setPath(1, 1, 2);
 
@@ -463,7 +465,7 @@ int main(int argc, char* argv[])
         int numFrames = 10;
 
         int numTargets = 3;
-        ReprojMT reprojMT(WINDOWHEIGHT, WINDOWWIDTH);
+        ReprojMT reprojMT(WINDOWWIDTH, WINDOWHEIGHT);
         reprojMT.init(fmodelPath, cmodelPath, numTargets, numFrames, outDir);
 //        reprojMT.setPath(1, 1, 2);
 
