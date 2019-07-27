@@ -1,1 +1,9 @@
 x64/
+.DS_Store
+python/.idea/encodings.xml
+python/.idea/misc.xml
+python/.idea/python.iml
+python/.idea/vcs.xml
+python/.idea/workspace.xml
+python/__pycache__/
+python/mkvideo.sh
