@@ -372,7 +372,7 @@ void ReprojMT::updateReprojMTShader(int numTarget, const vector<int>& targetIds,
 vector<float> ReprojMT::renderReprojMT(float threshold, bool leftPrimary, bool enableFlip, bool debug)
 {
     bool savePNG = true;
-    bool usePhong = false;
+    bool usePhong = true;
     _measureQuality = true;
     float thresholdId = threshold / 0.0001;
     string thresholdDir = _directory + to_string(int(round(thresholdId))) + "/";
