@@ -30,7 +30,7 @@ def plot_threshold_resolution(renderOptId):
         plt.xlabel("threshold")
         plt.ylabel(qualityOpt[qualityId])
         outFile = join(rootDir, modelName[modelId],
-        modelName[modelId] + "_" + qualityOpt[qualityId] + "_renderOpt" + str(renderOptId) + ".png")
+        modelName[modelId] + "_" + qualityOpt[qualityId] + "_renderOpt" + str(renderOptId) + "_2.png")
         plt.savefig(outFile)
         plt.show()
 
@@ -64,7 +64,7 @@ def plot_renderOption(thresholdId):
         xticks_list = allLegend[modelName[modelId]]
         plot_renderOption_bar(renderOptData, ylabel=qualityOpt[qualityId], xticks_list=xticks_list)
         outFile = join(rootDir, modelName[modelId],
-                       modelName[modelId] + "_renderOption_" + qualityOpt[qualityId] + ".png")
+                       modelName[modelId] + "_renderOption_" + qualityOpt[qualityId] + "_2.png")
         plt.savefig(outFile)
         plt.show()
 
@@ -93,14 +93,14 @@ if __name__== "__main__":
     modelId = 3
     resolutionId = 2
     rootDir = "G:/vr/stereoReproj/Results"
-    datafile = join(rootDir, modelName[modelId], modelName[modelId] + "_model_threshold_renderOption.csv")
+    datafile = join(rootDir, modelName[modelId], modelName[modelId] + "_model_threshold_renderOption2.csv")
     data = readCSV(datafile)
 
-    plot_threshold_resolution(renderOptId=1)
+    #plot_threshold_resolution(renderOptId=1)
 
-    # modelThreshold = dict()
-    # modelThreshold['Lucy'] = 10 // 2
-    # modelThreshold['angel'] = 16 // 2
-    # modelThreshold['Armadillo'] = 18 // 2
-    # modelThreshold['bunny'] = 12 // 2
-    # plot_renderOption(modelThreshold[modelName[modelId]])
+    modelThreshold = dict()
+    modelThreshold['Lucy'] = 10 // 2
+    modelThreshold['angel'] = 16 // 2
+    modelThreshold['Armadillo'] = 18 // 2
+    modelThreshold['bunny'] = 12 // 2
+    plot_renderOption(modelThreshold[modelName[modelId]])
