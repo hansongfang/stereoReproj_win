@@ -11,6 +11,7 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include "cxxopts.hpp"
+#define PI 3.14159265
 
 using namespace std;
 
@@ -103,11 +104,11 @@ int main(int argc, char* argv[])
 		reprojMT.updateQuality(measureQuality);
 		reprojMT.updateRenderOption(renderOptId);
 
-		float phi = 90;
-		float theta = 0;
+		float phi = 0.0 * PI;
+		float theta = 0.5 * PI;
 		reprojMT.updateThetaPhi(theta, phi);
 		auto res = reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);
-		res = reprojMT.renderReprojMT(thresholdVal, !leftPrimary, enableFlip, debug);
+		res = reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);
 
 
 		// vector<float> thetaList = { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120,  130, 140, 150, 160, 170, 180 };

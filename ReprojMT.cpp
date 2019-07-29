@@ -560,6 +560,7 @@ void ReprojMT::setMVP(int frameId, bool left, worldViewProj& mvp)
 	float y = cos(_theta);
 	float x = sin(_theta) * sin(_phi);
 	float z = sin(_theta) * cos(_phi);
+	cout << "rotation vector " << glm::to_string(glm::vec3(x, y, z)) << endl;
 	mvp.modelWorld = glm::rotate(trans, curDegree, glm::vec3(x, y, z));
 }
 
