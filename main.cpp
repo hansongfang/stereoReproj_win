@@ -78,7 +78,7 @@ int main(int argc, char* argv[])
         reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);
 		//reprojMT.renderReprojMT(thresholdVal, !leftPrimary, enableFlip, debug);
     }
-	if (0) {
+	if (1) {
 		//-----------------------------input---------------------------------------------------------//
 		//int modelId = 0;
 		int oriResId = 5;
@@ -98,40 +98,47 @@ int main(int argc, char* argv[])
 		float thresholdVal = 0.0016;
 		bool leftPrimary = true;
 		bool enableFlip = false;
-		bool debug = false;
+		bool debug = true;
 		bool measureQuality = true;
 		reprojMT.updateQuality(measureQuality);
 		reprojMT.updateRenderOption(renderOptId);
 
-		vector<float> thetaList = { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120,  130, 140, 150, 160, 170, 180 };
-		vector<float> phiList = { 0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 320, 340 };
-		int numTheta = 19;
-		int numPhi = 18;
-		int numRows = numTheta * numPhi;
-		int numCols = 2 + 4;
-		vector<vector<double>> qualityTable(numRows, vector<double>(numCols, 0.0));
-		for (int i = 0; i < numTheta; i++) {
-			float theta = thetaList[i];
-			for (int j = 0; j < numPhi; j++) {
-				float phi = phiList[j];
-				reprojMT.updateThetaPhi(theta, phi);
-				auto res = reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);
-				qualityTable[i * numPhi + j][0] = theta;
-				qualityTable[i * numPhi + j][1] = phi;
-				qualityTable[i * numPhi + j][2] = res[0];
-				qualityTable[i * numPhi + j][3] = res[1];
-				res = reprojMT.renderReprojMT(thresholdVal, !leftPrimary, enableFlip, debug);
-				qualityTable[i * numPhi + j][4] = res[0];
-				qualityTable[i * numPhi + j][5] = res[1];
-			}
-		}
-		string ofileName = RESULTDIR + MODELNAMES[modelId] + "/" + MODELNAMES[modelId] + "_" + "model_rotation_renderOrder.csv";
-		cout << "save excel " << ofileName << endl;
-		ofstream ofile(ofileName);
-		write_csv(qualityTable, numRows, numCols, ofile);
-		ofile.close();
+		float phi = 90;
+		float theta = 0;
+		reprojMT.updateThetaPhi(theta, phi);
+		auto res = reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);
+		res = reprojMT.renderReprojMT(thresholdVal, !leftPrimary, enableFlip, debug);
+
+
+		// vector<float> thetaList = { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120,  130, 140, 150, 160, 170, 180 };
+		// vector<float> phiList = { 0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 320, 340 };
+		// int numTheta = 19;
+		// int numPhi = 18;
+		// int numRows = numTheta * numPhi;
+		// int numCols = 2 + 4;
+		// vector<vector<double>> qualityTable(numRows, vector<double>(numCols, 0.0));
+		// for (int i = 0; i < numTheta; i++) {
+		// 	float theta = thetaList[i];
+		// 	for (int j = 0; j < numPhi; j++) {
+		// 		float phi = phiList[j];
+		// 		reprojMT.updateThetaPhi(theta, phi);
+		// 		auto res = reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);
+		// 		qualityTable[i * numPhi + j][0] = theta;
+		// 		qualityTable[i * numPhi + j][1] = phi;
+		// 		qualityTable[i * numPhi + j][2] = res[0];
+		// 		qualityTable[i * numPhi + j][3] = res[1];
+		// 		res = reprojMT.renderReprojMT(thresholdVal, !leftPrimary, enableFlip, debug);
+		// 		qualityTable[i * numPhi + j][4] = res[0];
+		// 		qualityTable[i * numPhi + j][5] = res[1];
+		// 	}
+		// }
+		// string ofileName = RESULTDIR + MODELNAMES[modelId] + "/" + MODELNAMES[modelId] + "_" + "model_rotation_renderOrder.csv";
+		// cout << "save excel " << ofileName << endl;
+		// ofstream ofile(ofileName);
+		// write_csv(qualityTable, numRows, numCols, ofile);
+		// ofile.close();
 	}
-    if(1)
+    if(0)
     {
         //(renderOpt, threshold) -> [(PSNR, SSIM)_1k, (PSNR, SSIM)_3k, (PSNR, SSIM)_5k, (PSNR, SSIM)_10k]
         // Linear, Nearest Sampling have an effect on the result
