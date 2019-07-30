@@ -219,10 +219,10 @@ void main()
     }
     else if(repDiff[0] >= threshold){
       uint counter2 = atomicCounterIncrement(ac_frag2);
-	  discard;
+	    discard;
     } 
     else{
-	  uint counter2 = atomicCounterIncrement(ac_frag2);
+	    uint counter2 = atomicCounterIncrement(ac_frag2);
       color = reShading();
       //color = vec4(1.0, 0.0, 0.0, 1.0);
     }
@@ -232,11 +232,11 @@ void main()
       color = vec4(repColor[1], 1.0);
     }
     else if(repDiff[1] >= threshold){
-	  uint counter2 = atomicCounterIncrement(ac_frag2);
+	    uint counter2 = atomicCounterIncrement(ac_frag2);
       discard;
     }
     else{
-	  uint counter2 = atomicCounterIncrement(ac_frag2);
+	    uint counter2 = atomicCounterIncrement(ac_frag2);
       color = reShading();
       // color = vec4(0.0, 0.0, 1.0, 1.0);
     }
@@ -249,11 +249,11 @@ void main()
       color = vec4(repColor[1], 1.0);
     }
     else if(repDiff[0] >= threshold || repDiff[1] >= threshold){
-	  uint counter2 = atomicCounterIncrement(ac_frag2);
+	    uint counter2 = atomicCounterIncrement(ac_frag2);
       discard;
     }
     else{
-	  uint counter2 = atomicCounterIncrement(ac_frag2);
+	    uint counter2 = atomicCounterIncrement(ac_frag2);
       color = reShading();
     }
   }
@@ -272,6 +272,7 @@ void main()
     }
   }
   else if(renderOption == 5){
+    //F1F0
     if(repDiff[1] < threshold && repDiff[1] > epsilon){
       color = vec4(repColor[1], 1.0);
     }
@@ -279,11 +280,11 @@ void main()
       color = vec4(repColor[0], 1.0);
     }
     else if(repDiff[0] >= threshold || repDiff[1] >= threshold){
-	  uint counter2 = atomicCounterIncrement(ac_frag2);
+	    uint counter2 = atomicCounterIncrement(ac_frag2);
       discard;
     }
     else{
-	  uint counter2 = atomicCounterIncrement(ac_frag2);
+	    uint counter2 = atomicCounterIncrement(ac_frag2);
       color = reShading();
     }
   }
@@ -299,10 +300,10 @@ void main()
     }
     else if(repDiff[0] >= threshold || repDiff[1] >= threshold || repDiff[2] >= threshold){
       uint counter2 = atomicCounterIncrement(ac_frag2);
-	  discard;
+	    discard;
     }
     else{
-	  uint counter2 = atomicCounterIncrement(ac_frag2);
+	    uint counter2 = atomicCounterIncrement(ac_frag2);
       color= reShading();
     }
   }
@@ -320,11 +321,11 @@ void main()
       color = vec4(repColor[3], 1.0);
     }
     else if(repDiff[0] >= threshold || repDiff[1] >= threshold || repDiff[2] >= threshold || repDiff[3] >= threshold){
-     uint counter2 = atomicCounterIncrement(ac_frag2);
-	 discard;
+      uint counter2 = atomicCounterIncrement(ac_frag2);
+	    discard;
     }
     else{
-	  uint counter2 = atomicCounterIncrement(ac_frag2);
+	    uint counter2 = atomicCounterIncrement(ac_frag2);
       color= reShading();
     }
   }
