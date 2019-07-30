@@ -413,6 +413,7 @@ int main(int argc, char* argv[])
 		ReprojMT reprojMT(WINDOWWIDTH, WINDOWHEIGHT);
 		reprojMT.init(fmodelPath, cmodelPath, numTargets, numFrames, outDir);
 		reprojMT.setPath(1, 1, 2);
+		reprojMT.setPath3(1, 1, 2, 200, 60, numFrames);
 
 		//-------------------render option----------------------------------//
 		bool leftPrimary = true;
@@ -457,7 +458,7 @@ int main(int argc, char* argv[])
 			}
 		}
 
-        string ofileName = RESULTDIR + MODELNAMES[modelId] + "/" + MODELNAMES[modelId] + "_" + "model_renderOption_missratio.csv";
+        string ofileName = RESULTDIR + MODELNAMES[modelId] + "/" + MODELNAMES[modelId] + "_" + "model_renderOption_missratio_faster.csv";
 		cout << "saving excel "<<ofileName << endl;
 		ofstream ofile(ofileName);
 		write_csv(qualityTable, numRows, numCols, ofile);
