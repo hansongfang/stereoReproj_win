@@ -402,12 +402,12 @@ int main(int argc, char* argv[])
 		// initRotateY = 180.0
 		//-----------------------------input---------------------------------------------------------//
 		//int modelId = 0;
-		vector<float> thresholdList = {0.0012, 0.0016, 0.0018, 0.0012};
+		vector<double> thresholdList = {0.0012, 0.0016, 0.0018, 0.0012};
 		int coarseResId = 3, oriResId = 5;
 		string fmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][oriResId] + ".ply";
 		string cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + ".ply";
 		string outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + "/";
-		int numFrames = 300;
+		int numFrames = 100;
 		int numTargets = 4;
 
 		ReprojMT reprojMT(WINDOWWIDTH, WINDOWHEIGHT);
@@ -423,7 +423,7 @@ int main(int argc, char* argv[])
 
 		// parameters
 		float thresholdVal = thresholdList[modelId];
-		cout<<"setThreshold "<<threshold<<endl;
+		cout<<"setThreshold "<< thresholdVal<<endl;
 		int numCoarseModels = 6;
 		vector<int> renderOptions = { 0, 1, 2, 3, 4 };
 		int numRenderOption = renderOptions.size();
@@ -459,8 +459,8 @@ int main(int argc, char* argv[])
 
         string ofileName = RESULTDIR + MODELNAMES[modelId] + "/" + MODELNAMES[modelId] + "_" + "model_renderOption_missratio.csv";
 		cout << "saving excel "<<ofileName << endl;
-		ofile.open(ofileName);
-		write_csv(qualityTable2, numRows, numCols, ofile);
+		ofstream ofile(ofileName);
+		write_csv(qualityTable, numRows, numCols, ofile);
 		ofile.close();
 
 	}
