@@ -538,7 +538,8 @@ int main(int argc, char* argv[])
         // Shader usage: vs"reprojMultiTargetMultiOption.vs" fs"reprojMultiTargetMultiOption.fs"
         //-----------------------------input---------------------------------------------------------//
         //int modelId = 0;
-        int coarseResId = 2, oriResId = 5;
+        //int coarseResId = 2, oriResId = 5;
+		int oriResId = 5;
         string fmodelPath = MODELDIR + MODELNAMES[modelId] +"/"+ MODELS[modelId][oriResId]+".ply";
         string cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + ".ply";
         string outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + "/";
