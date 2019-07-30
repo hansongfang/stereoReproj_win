@@ -395,7 +395,7 @@ int main(int argc, char* argv[])
 		//        write_csv(qualityTable2, numRows, numCols_time, ofile);
 		//        ofile.close();
 	}
-	if(1){
+	if(0){
 		// cache miss ratio
 		// bar graph (resolution, rendermode) -> cache miss ratio
 		// uncomment  //layout(early_fragment_tests) in;
@@ -532,7 +532,7 @@ int main(int argc, char* argv[])
         write_csv(qualityTable, numRows, numCols, ofile);
         ofile.close();
     }
-    if(0)
+    if(1)
     {
         // graph PSNR/SSIM vs(rotation), legend: s1t1, t1s1
         // Shader usage: vs"reprojMultiTargetMultiOption.vs" fs"reprojMultiTargetMultiOption.fs"
