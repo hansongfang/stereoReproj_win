@@ -99,7 +99,7 @@ if __name__== "__main__":
     #plot_threshold_resolution(renderOptId=1)
 
     modelThreshold = dict()
-    modelThreshold['Lucy'] = 10 // 2
+    modelThreshold['Lucy'] = 12 // 2
     modelThreshold['angel'] = 16 // 2
     modelThreshold['Armadillo'] = 18 // 2
     modelThreshold['bunny'] = 12 // 2
