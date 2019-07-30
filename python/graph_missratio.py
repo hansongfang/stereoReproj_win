@@ -8,6 +8,14 @@ import numpy as np
 from os.path import join
 from utils import readCSV
 
+# TODO: F0, F1 renderOpt=0 -> F1 renderOpt=1->F0
+
+
+def getData(renderOptId, resolutionId, qualityOffset):
+    """(resolutionId, renderOpt) -> (psnr, ssim)"""
+    numRenderOption = len(renderOpts)
+    return data[resolutionId * numRenderOption + renderOptId, 2 + qualityOffset]
+
 
 def plot_renderOption_bar(renderOptData, ylabel, xticks_list):
     """
@@ -36,7 +44,19 @@ def plot_renderOption_bar(renderOptData, ylabel, xticks_list):
 
 def plot_missratio_groupbar():
     """(resolution, renderOption) -> missratio, groupbar"""
-    
+    numRenderOption = len(renderOpts)
+    for qualityId in range(2):
+        renderOptData = np.zeros((numRenderOption, numResolution))
+        for renderOptId in range(numRenderOption):
+            for resolutionId in range(numResolution):
+                renderOptData[renderOptId, resolutionId] = \
+                    getData(renderOptId, resolutionId, qualityOffset)
+        xticks_list = allLegend[modelName[modelId]]
+        plot_renderOption_bar(renderOptData, ylabel=qualityOpt[qualityId], xticks_list=xticks_list)
+        outFile = join(rootDir, modelName[modelId],
+                       modelName[modelId] + "_missratio_" + qualityOpt[qualityId] + ".png")
+        plt.savefig(outFile)
+        plt.show()
 
     pass
 
@@ -64,7 +84,7 @@ if __name__=="__main__":
     modelId = 3
     resolutionId = 2
     rootDir = "G:/vr/stereoReproj/Results"
-    datafile = join(rootDir, modelName[modelId], modelName[modelId] + "_model_threshold_renderOption_faster2.csv")
+    datafile = join(rootDir, modelName[modelId], modelName[modelId] + "_model_renderOption_missratio.csv")
     data = readCSV(datafile)
 
-    plot_missratio_groupbar(modelThreshold[modelName[modelId]])
+    plot_missratio_groupbar()
