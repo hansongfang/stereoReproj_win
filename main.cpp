@@ -108,7 +108,7 @@ int main(int argc, char* argv[])
 		float theta = 50.0/180.0 * PI;
 		reprojMT.updateThetaPhi(theta, phi);
 		auto res = reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);
-		res = reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);
+		res = reprojMT.renderReprojMT(thresholdVal, !leftPrimary, enableFlip, debug);
 
 
 		// vector<float> thetaList = { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120,  130, 140, 150, 160, 170, 180 };
