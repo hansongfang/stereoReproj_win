@@ -227,6 +227,7 @@ int main(int argc, char* argv[])
 	{
 		//(renderOpt, threshold) -> [(PSNR, SSIM)_1k, (PSNR, SSIM)_3k, (PSNR, SSIM)_5k, (PSNR, SSIM)_10k]
 		// Linear, Nearest Sampling have an effect on the result
+		// initRotateY = 180.0
 		// # of frames also have an effect
 		//-----------------------------input---------------------------------------------------------//
 		//int modelId = 0;
@@ -312,6 +313,7 @@ int main(int argc, char* argv[])
 	{
 		//(renderOpt, threshold) -> [(PSNR, SSIM)_1k, (PSNR, SSIM)_3k, (PSNR, SSIM)_5k, (PSNR, SSIM)_10k]
 		// Linear, Nearest Sampling have an effect on the result
+		// initRotateY = 180.0
 		// # of frames also have an effect
 		//-----------------------------input---------------------------------------------------------//
 		//int modelId = 0;
@@ -392,6 +394,75 @@ int main(int argc, char* argv[])
 		//        ofile.open(ofileName);
 		//        write_csv(qualityTable2, numRows, numCols_time, ofile);
 		//        ofile.close();
+	}
+	if(0){
+		// cache miss ratio
+		// bar graph (resolution, rendermode) -> cache miss ratio
+		// uncomment  //layout(early_fragment_tests) in;
+		// initRotateY = 180.0
+		//-----------------------------input---------------------------------------------------------//
+		//int modelId = 0;
+		vector<float> thresholdList = {0.0012, 0.0016, 0.0018, 0.0012};
+		int coarseResId = 3, oriResId = 5;
+		string fmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][oriResId] + ".ply";
+		string cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + ".ply";
+		string outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + "/";
+		int numFrames = 300;
+		int numTargets = 4;
+
+		ReprojMT reprojMT(WINDOWWIDTH, WINDOWHEIGHT);
+		reprojMT.init(fmodelPath, cmodelPath, numTargets, numFrames, outDir);
+		reprojMT.setPath(1, 1, 2);
+
+		//-------------------render option----------------------------------//
+		bool leftPrimary = true;
+		bool enableFlip = false;
+		bool debug = false;
+		bool measureQuality = true;
+		reprojMT.updateQuality(measureQuality);
+
+		// parameters
+		float thresholdVal = thresholdList[modelId];
+		cout<<"setThreshold "<<threshold<<endl;
+		int numCoarseModels = 6;
+		vector<int> renderOptions = { 0, 1, 2, 3, 4 };
+		int numRenderOption = renderOptions.size();
+		int numRows = numCoarseModels * numRenderOption;
+		int numCols = 2 + 3; // (PSNR, SSIM, missRatio)
+		vector<vector<double>> qualityTable(numRows, vector<double>(numCols, 0.0));
+		for (int coarseModelId = 0; coarseModelId < numCoarseModels; coarseModelId++) {
+			outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseModelId] + "/";
+			cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseModelId] + ".ply";
+			cout << "coarse model " << cmodelPath << endl;
+			reprojMT.updateCoarseModel(cmodelPath);
+			reprojMT.updateDirectory(outDir);
+			for (int renderOptId = 0; renderOptId < numRenderOption; renderOptId++) {
+				int renderOption = renderOptions[renderOptId];
+				reprojMT.updateRenderOption(renderOption);
+				auto res = reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);
+				int rowId = coarseModelId * numRenderOption + renderOptId;
+				qualityTable[rowId][0] = coarseModelId;
+				qualityTable[rowId][1] = renderOption;
+				qualityTable[rowId][2] = res[0];
+				qualityTable[rowId][3] = res[1];
+				qualityTable[rowId][4] = res[2];
+
+				if (1) {
+					cout << "result " << endl;
+					for (auto v : res) {
+						cout << v << " ";
+					}
+					cout << endl;
+				}
+			}
+		}
+
+        string ofileName = RESULTDIR + MODELNAMES[modelId] + "/" + MODELNAMES[modelId] + "_" + "model_renderOption_missratio.csv";
+		cout << "saving excel "<<ofileName << endl;
+		ofile.open(ofileName);
+		write_csv(qualityTable2, numRows, numCols, ofile);
+		ofile.close();
+
 	}
     if(0)
     {
