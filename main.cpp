@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
         reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);
 		//reprojMT.renderReprojMT(thresholdVal, !leftPrimary, enableFlip, debug);
     }
-	if (1) {
+	if (0) {
 		//-----------------------------input---------------------------------------------------------//
 		//int modelId = 0;
 		int oriResId = 5;
@@ -395,7 +395,7 @@ int main(int argc, char* argv[])
 		//        write_csv(qualityTable2, numRows, numCols_time, ofile);
 		//        ofile.close();
 	}
-	if(0){
+	if(1){
 		// cache miss ratio
 		// bar graph (resolution, rendermode) -> cache miss ratio
 		// uncomment  //layout(early_fragment_tests) in;
