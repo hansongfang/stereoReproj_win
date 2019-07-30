@@ -543,7 +543,7 @@ int main(int argc, char* argv[])
         string fmodelPath = MODELDIR + MODELNAMES[modelId] +"/"+ MODELS[modelId][oriResId]+".ply";
         string cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + ".ply";
         string outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + "/";
-        int numFrames = 10;
+        int numFrames = 100;
 
         int numTargets = 3;
         ReprojMT reprojMT(WINDOWWIDTH, WINDOWHEIGHT);
@@ -552,7 +552,7 @@ int main(int argc, char* argv[])
 
         //-------------------render option----------------------------------//
         float threshold = 0.0016;
-        bool debug = true;
+        bool debug = false;
         bool enableFlip = false;
         bool measureQuality = true;
         reprojMT.updateQuality(measureQuality);
