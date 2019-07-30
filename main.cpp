@@ -104,7 +104,7 @@ int main(int argc, char* argv[])
 		reprojMT.updateQuality(measureQuality);
 		reprojMT.updateRenderOption(renderOptId);
 
-		float phi = 240/0/180.0 * PI;
+		float phi = 240.0/180.0 * PI;
 		float theta = 50.0/180.0 * PI;
 		reprojMT.updateThetaPhi(theta, phi);
 		auto res = reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);
