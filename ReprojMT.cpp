@@ -592,7 +592,7 @@ void ReprojMT::setModelRotateYPath(int rotatePeriod, int option)
     _modelRotateYPath.clear();
     _modelRotateYPath.resize(_numFrames, 0.0);
 
-	float initRotateY = 0.0f;
+	float initRotateY = 180.0f;
     float stepRotateY = 360.0f / rotatePeriod;
     if (option == 1) {
         for (int i = 0; i < _numFrames; i++) {
