@@ -36,7 +36,7 @@ def plot_renderOption_bar(renderOptData, ylabel, xticks_list):
     plt.xlabel('resolution')
     low = np.min(renderOptData)
     high = np.max(renderOptData)
-    plt.ylim([low - 0.5 * (high - low), high + 0.5 * (high - low)])
+    plt.ylim([0.0, high + 0.5 * (high - low)])
     plt.ylabel(ylabel)
     # plt.title(title)
     plt.xticks(x + 2.5 * bar_width, xticks_list)
@@ -45,18 +45,17 @@ def plot_renderOption_bar(renderOptData, ylabel, xticks_list):
 def plot_missratio_groupbar():
     """(resolution, renderOption) -> missratio, groupbar"""
     numRenderOption = len(renderOpts)
-    for qualityId in range(2):
-        renderOptData = np.zeros((numRenderOption, numResolution))
-        for renderOptId in range(numRenderOption):
-            for resolutionId in range(numResolution):
-                renderOptData[renderOptId, resolutionId] = \
-                    getData(renderOptId, resolutionId, qualityOffset)
-        xticks_list = allLegend[modelName[modelId]]
-        plot_renderOption_bar(renderOptData, ylabel=qualityOpt[qualityId], xticks_list=xticks_list)
-        outFile = join(rootDir, modelName[modelId],
-                       modelName[modelId] + "_missratio_" + qualityOpt[qualityId] + ".png")
-        plt.savefig(outFile)
-        plt.show()
+    renderOptData = np.zeros((numRenderOption, numResolution))
+    for renderOptId in range(numRenderOption):
+        for resolutionId in range(numResolution):
+            renderOptData[renderOptId, resolutionId] = \
+                getData(renderOptId, resolutionId, qualityOffset=qualityOffset)
+    xticks_list = allLegend[modelName[modelId]]
+    plot_renderOption_bar(renderOptData, ylabel='missratio', xticks_list=xticks_list)
+    outFile = join(rootDir, modelName[modelId],
+                   modelName[modelId] + "_missratio_.png")
+    plt.savefig(outFile, bbox_inches='tight')
+    plt.show()
 
     pass
 
@@ -77,13 +76,13 @@ if __name__=="__main__":
     allLegend['bunny'] = ['1k', '3k', '5k', '10k', '25k', '70k']
     thresholds = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]) * 0.0002
     renderOpts = [0, 1, 2, 3, 4]
-    renderLabels = ['F0', 'F1', 'F0F1', 'F0F1F2', 'F0F1F2F3']
-    qualityOpt = ['PSNR', 'SSIM']
-    qualityOffset = [0, 1]
+    renderLabels = ['F1', 'F0', 'F0F1', 'F0F1F2', 'F0F1F2F3']
+    qualityOpt = ['missratio']
+    qualityOffset = 2 # missratio
 
-    modelId = 3
+    modelId = 0
     resolutionId = 2
-    rootDir = "G:/vr/stereoReproj/Results"
+    rootDir = "/Users/sfhan/Dropbox/stereoRepoj/Results"
     datafile = join(rootDir, modelName[modelId], modelName[modelId] + "_model_renderOption_missratio.csv")
     data = readCSV(datafile)
 

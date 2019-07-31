@@ -47,7 +47,7 @@ def graph_theta_phi_3d():
         plt.title(modelName[modelId])
         outFile = models[modelName[modelId]][coarseModelId] + '_theta_phi_' + qualityOpt[qualityId] + '_render2.png'
         outFile = join(rootDir, modelName[modelId], outFile)
-        plt.savefig(outFile)
+        plt.savefig(outFile, bbox_inches='tight')
         plt.show()
 
 

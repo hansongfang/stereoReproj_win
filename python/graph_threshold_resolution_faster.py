@@ -26,12 +26,12 @@ def plot_threshold_resolution(renderOptId):
             tempData = data[renderOptId * numThreshold: (renderOptId+1)*numThreshold, colId]
             plt.plot(thresholdX, tempData, color=colors[resolutionId], linestyle='-', linewidth=1)
         plt.legend(allLegend[modelName[modelId]])
-        plt.title(modelName[modelId])
+        # plt.title(modelName[modelId])
         plt.xlabel("threshold")
         plt.ylabel(qualityOpt[qualityId])
         outFile = join(rootDir, modelName[modelId],
-        modelName[modelId] + "_" + qualityOpt[qualityId] + "_renderOpt" + str(renderOptId) + "_2.png")
-        plt.savefig(outFile)
+        modelName[modelId] + "_" + qualityOpt[qualityId] + "_renderOpt" + str(renderOptId) + "_faster.png")
+        plt.savefig(outFile, bbox_inches='tight')
         plt.show()
 
 def plot_renderOption_bar(renderOptData, ylabel, xticks_list):
@@ -64,8 +64,8 @@ def plot_renderOption(thresholdId):
         xticks_list = allLegend[modelName[modelId]]
         plot_renderOption_bar(renderOptData, ylabel=qualityOpt[qualityId], xticks_list=xticks_list)
         outFile = join(rootDir, modelName[modelId],
-                       modelName[modelId] + "_renderOption_" + qualityOpt[qualityId] + "_faster_2.png")
-        plt.savefig(outFile)
+                       modelName[modelId] + "_renderOption_" + qualityOpt[qualityId] + "_faster.png")
+        plt.savefig(outFile, bbox_inches='tight')
         plt.show()
 
 
@@ -86,21 +86,21 @@ if __name__== "__main__":
     allLegend['bunny'] = ['1k', '3k', '5k', '10k', '25k', '70k']
     thresholds = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]) * 0.0002
     renderOpts = [0, 1, 2, 3, 4]
-    renderLabels = ['F0', 'F1', 'F0F1', 'F0F1F2', 'F0F1F2F3']
+    renderLabels = ['F1', 'F0', 'F0F1', 'F0F1F2', 'F0F1F2F3']
     qualityOpt = ['PSNR', 'SSIM']
     qualityOffset = [0, 1]
 
-    modelId = 3
-    resolutionId = 2
-    rootDir = "G:/vr/stereoReproj/Results"
-    datafile = join(rootDir, modelName[modelId], modelName[modelId] + "_model_threshold_renderOption_faster2.csv")
-    data = readCSV(datafile)
+    for modelId in range(4):
+    # modelId = 3
+        resolutionId = 2
+        rootDir = "/Users/sfhan/Dropbox/stereoRepoj/Results"
+        datafile = join(rootDir, modelName[modelId], modelName[modelId] + "_model_threshold_renderOption_faster2.csv")
+        data = readCSV(datafile)
+        plot_threshold_resolution(1)
 
-    #plot_threshold_resolution(1)
-
-    modelThreshold = dict()
-    modelThreshold['Lucy'] = 10 // 2
-    modelThreshold['angel'] = 16 // 2
-    modelThreshold['Armadillo'] = 18 // 2
-    modelThreshold['bunny'] = 12 // 2
-    plot_renderOption(modelThreshold[modelName[modelId]])
+        modelThreshold = dict()
+        modelThreshold['Lucy'] = 12 // 2
+        modelThreshold['angel'] = 16 // 2
+        modelThreshold['Armadillo'] = 18 // 2
+        modelThreshold['bunny'] = 12 // 2
+        plot_renderOption(modelThreshold[modelName[modelId]])
