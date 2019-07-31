@@ -453,7 +453,7 @@ vector<float> ReprojMT::renderReprojMT(float threshold, bool leftPrimary, bool e
 		res = this->readAtomicCounterbuffer();
 		float tempMissRatio = (float)res.second / (float)res.first;
 		avgMissRatio += tempMissRatio;
-        cout<<tempMissRatio<<endl;
+        //cout<<tempMissRatio<<endl;
         if (debug) {
             this->saveFigure(savePNG, frameId, thresholdDir, renderLeft);
         }
@@ -713,6 +713,6 @@ pair<GLuint, GLuint> ReprojMT::readAtomicCounterbuffer()
     glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, _atomicBufferID);
     glGetBufferSubData(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint)*2, &userCounter);
     glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
-    printf("redPixels: %u %u\n", userCounter[0], userCounter[1]);
+    //printf("redPixels: %u %u\n", userCounter[0], userCounter[1]);
     return std::make_pair(userCounter[0], userCounter[1]);
 }

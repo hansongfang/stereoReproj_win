@@ -1,5 +1,5 @@
 #version 460 core
-//layout(early_fragment_tests) in;
+layout(early_fragment_tests) in;
 out vec4 color;
 
 #define NUMTARGET 4
