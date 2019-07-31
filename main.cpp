@@ -407,7 +407,7 @@ int main(int argc, char* argv[])
 		string fmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][oriResId] + ".ply";
 		string cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + ".ply";
 		string outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + "/";
-		int numFrames = 5;
+		int numFrames = 300;
 		int numTargets = 4;
 
 		ReprojMT reprojMT(WINDOWWIDTH, WINDOWHEIGHT);
@@ -418,7 +418,7 @@ int main(int argc, char* argv[])
 		//-------------------render option----------------------------------//
 		bool leftPrimary = true;
 		bool enableFlip = false;
-		bool debug = true;
+		bool debug = false;
 		bool measureQuality = true;
 		reprojMT.updateQuality(measureQuality);
 
