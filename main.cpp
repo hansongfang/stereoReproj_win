@@ -146,7 +146,7 @@ int main(int argc, char* argv[])
         // # of frames also have an effect
         //-----------------------------input---------------------------------------------------------//
         //int modelId = 0;
-        int coarseResId = 3, oriResId = 5;
+        int oriResId = 5;
         string fmodelPath = MODELDIR + MODELNAMES[modelId] +"/"+ MODELS[modelId][oriResId]+".ply";
         string cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + ".ply";
         string outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + "/";
@@ -231,7 +231,7 @@ int main(int argc, char* argv[])
 		// # of frames also have an effect
 		//-----------------------------input---------------------------------------------------------//
 		//int modelId = 0;
-		int coarseResId = 3, oriResId = 5;
+		int oriResId = 5;
 		string fmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][oriResId] + ".ply";
 		string cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + ".ply";
 		string outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + "/";
@@ -317,7 +317,7 @@ int main(int argc, char* argv[])
 		// # of frames also have an effect
 		//-----------------------------input---------------------------------------------------------//
 		//int modelId = 0;
-		int coarseResId = 3, oriResId = 5;
+		int oriResId = 5;
 		string fmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][oriResId] + ".ply";
 		string cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + ".ply";
 		string outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + "/";
@@ -403,7 +403,7 @@ int main(int argc, char* argv[])
 		//-----------------------------input---------------------------------------------------------//
 		//int modelId = 0;
 		vector<double> thresholdList = {0.0012, 0.0016, 0.0018, 0.0012};
-		int coarseResId = 3, oriResId = 5;
+		int oriResId = 5;
 		string fmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][oriResId] + ".ply";
 		string cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + ".ply";
 		string outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + "/";
@@ -477,7 +477,7 @@ int main(int argc, char* argv[])
         // graph PSNR/SSIM vs(rotation, translate, rotOrder)->(PSNR, SSIM)
         //-----------------------------input---------------------------------------------------------//
         //int modelId = 0;
-        int coarseResId = 2, oriResId = 5;
+        int oriResId = 5;
         string fmodelPath = MODELDIR + MODELNAMES[modelId] +"/"+ MODELS[modelId][oriResId]+".ply";
         string cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + ".ply";
         string outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + "/";
