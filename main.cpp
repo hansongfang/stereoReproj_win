@@ -407,7 +407,7 @@ int main(int argc, char* argv[])
 		string fmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][oriResId] + ".ply";
 		string cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + ".ply";
 		string outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + "/";
-		int numFrames = 100;
+		int numFrames = 5;
 		int numTargets = 4;
 
 		ReprojMT reprojMT(WINDOWWIDTH, WINDOWHEIGHT);
@@ -422,9 +422,10 @@ int main(int argc, char* argv[])
 		bool measureQuality = true;
 		reprojMT.updateQuality(measureQuality);
 
-		float thresholdVal = thresholdList[modelId];
+		float thresholdVal = 0.0012;
+		//float thresholdVal = thresholdList[modelId];
 		cout<<"setThreshold "<< thresholdVal<<endl;
-		int renderOption = 4;
+		int renderOption = 2;
 		reprojMT.updateRenderOption(renderOption);
 		auto res = reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);
 

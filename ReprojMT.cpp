@@ -59,7 +59,7 @@ void ReprojMT::init(string fMeshPath, string cMeshPath, int numTargets, int numF
     setupCacheFBO();
 
     // Opengl Global setting
-    glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // very far position
     glViewport(0, 0, windowWidth, windowHeight);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
@@ -512,7 +512,7 @@ void ReprojMT::saveFigure(bool savePNG, int frameId, const string &thresholdDir,
         filename += ".png";
     else
         filename += ".jpg";
-    cout<<"save figure "<<filename<<endl;
+    //cout<<"save figure "<<filename<<endl;
     if(savePNG)
         _window->saveFramebuffer(filename, "png", PNG_DEFAULT);
     else
@@ -530,7 +530,7 @@ void ReprojMT::saveGTFigure(bool savePNG, int frameId, const string &thresholdDi
         filename += ".png";
     else
         filename += ".jpg";
-    cout<<"save figure "<<filename<<endl;
+    //cout<<"save figure "<<filename<<endl;
     if(savePNG)
         _window->saveFramebuffer(filename, "png", PNG_DEFAULT);
     else
@@ -561,7 +561,7 @@ void ReprojMT::setMVP(int frameId, bool left, worldViewProj& mvp)
 	float y = cos(_theta);
 	float x = sin(_theta) * sin(_phi);
 	float z = sin(_theta) * cos(_phi);
-	cout << "rotation vector " << glm::to_string(glm::vec3(x, y, z)) << endl;
+	//cout << "rotation vector " << glm::to_string(glm::vec3(x, y, z)) << endl;
 	mvp.modelWorld = glm::rotate(trans, curDegree, glm::vec3(x, y, z));
 }
 
