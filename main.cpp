@@ -423,19 +423,16 @@ int main(int argc, char* argv[])
 		reprojMT.updateQuality(measureQuality);
 
 		// float thresholdVal = 0.0012;
-		// //float thresholdVal = thresholdList[modelId];
 		// cout<<"setThreshold "<< thresholdVal<<endl;
 		// int renderOption = 2;
 		// reprojMT.updateRenderOption(renderOption);
 		// auto res = reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);
 
-
 		//parameters
 		float thresholdVal = thresholdList[modelId];
 		cout<<"setThreshold "<< thresholdVal<<endl;
 		int numCoarseModels = 6;
-		//vector<int> renderOptions = { 0, 1, 2, 3, 4 };
-		vector<int> renderOptions = { 4 };
+		vector<int> renderOptions = { 0, 1, 2, 3, 4 };
 		int numRenderOption = renderOptions.size();
 		int numRows = numCoarseModels * numRenderOption;
 		int numCols = 2 + 3; // (PSNR, SSIM, missRatio)
@@ -467,11 +464,11 @@ int main(int argc, char* argv[])
 			}
 		}
 
-        // string ofileName = RESULTDIR + MODELNAMES[modelId] + "/" + MODELNAMES[modelId] + "_" + "model_renderOption_missratio_faster.csv";
-		// cout << "saving excel "<<ofileName << endl;
-		// ofstream ofile(ofileName);
-		// write_csv(qualityTable, numRows, numCols, ofile);
-		// ofile.close();
+        string ofileName = RESULTDIR + MODELNAMES[modelId] + "/" + MODELNAMES[modelId] + "_" + "model_renderOption_missratio_faster.csv";
+		cout << "saving excel "<<ofileName << endl;
+		ofstream ofile(ofileName);
+		write_csv(qualityTable, numRows, numCols, ofile);
+		ofile.close();
 
 	}
     if(0)
