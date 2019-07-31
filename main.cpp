@@ -464,7 +464,7 @@ int main(int argc, char* argv[])
 			}
 		}
 
-        string ofileName = RESULTDIR + MODELNAMES[modelId] + "/" + MODELNAMES[modelId] + "_" + "model_renderOption_missratio_faster.csv";
+        string ofileName = RESULTDIR + MODELNAMES[modelId] + "/" + MODELNAMES[modelId] + "_" + "model_renderOption_missratio_faster_earlyz.csv";
 		cout << "saving excel "<<ofileName << endl;
 		ofstream ofile(ofileName);
 		write_csv(qualityTable, numRows, numCols, ofile);
