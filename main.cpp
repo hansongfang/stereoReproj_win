@@ -395,7 +395,7 @@ int main(int argc, char* argv[])
 		//        write_csv(qualityTable2, numRows, numCols_time, ofile);
 		//        ofile.close();
 	}
-	if(0){
+	if(1){
 		// cache miss ratio
 		// bar graph (resolution, rendermode) -> cache miss ratio
 		// uncomment  //layout(early_fragment_tests) in;
@@ -418,51 +418,58 @@ int main(int argc, char* argv[])
 		//-------------------render option----------------------------------//
 		bool leftPrimary = true;
 		bool enableFlip = false;
-		bool debug = false;
+		bool debug = true;
 		bool measureQuality = true;
 		reprojMT.updateQuality(measureQuality);
 
-		// parameters
 		float thresholdVal = thresholdList[modelId];
 		cout<<"setThreshold "<< thresholdVal<<endl;
-		int numCoarseModels = 6;
-		vector<int> renderOptions = { 0, 1, 2, 3, 4 };
-		int numRenderOption = renderOptions.size();
-		int numRows = numCoarseModels * numRenderOption;
-		int numCols = 2 + 3; // (PSNR, SSIM, missRatio)
-		vector<vector<double>> qualityTable(numRows, vector<double>(numCols, 0.0));
-		for (int coarseModelId = 0; coarseModelId < numCoarseModels; coarseModelId++) {
-			outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseModelId] + "/";
-			cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseModelId] + ".ply";
-			cout << "coarse model " << cmodelPath << endl;
-			reprojMT.updateCoarseModel(cmodelPath);
-			reprojMT.updateDirectory(outDir);
-			for (int renderOptId = 0; renderOptId < numRenderOption; renderOptId++) {
-				int renderOption = renderOptions[renderOptId];
-				reprojMT.updateRenderOption(renderOption);
-				auto res = reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);
-				int rowId = coarseModelId * numRenderOption + renderOptId;
-				qualityTable[rowId][0] = coarseModelId;
-				qualityTable[rowId][1] = renderOption;
-				qualityTable[rowId][2] = res[0];
-				qualityTable[rowId][3] = res[1];
-				qualityTable[rowId][4] = res[2];
+		int renderOption = 4;
+		reprojMT.updateRenderOption(renderOption);
+		auto res = reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);
 
-				if (1) {
-					cout << "result " << endl;
-					for (auto v : res) {
-						cout << v << " ";
-					}
-					cout << endl;
-				}
-			}
-		}
 
-        string ofileName = RESULTDIR + MODELNAMES[modelId] + "/" + MODELNAMES[modelId] + "_" + "model_renderOption_missratio_faster.csv";
-		cout << "saving excel "<<ofileName << endl;
-		ofstream ofile(ofileName);
-		write_csv(qualityTable, numRows, numCols, ofile);
-		ofile.close();
+		// parameters
+		// float thresholdVal = thresholdList[modelId];
+		// cout<<"setThreshold "<< thresholdVal<<endl;
+		// int numCoarseModels = 6;
+		// vector<int> renderOptions = { 0, 1, 2, 3, 4 };
+		// int numRenderOption = renderOptions.size();
+		// int numRows = numCoarseModels * numRenderOption;
+		// int numCols = 2 + 3; // (PSNR, SSIM, missRatio)
+		// vector<vector<double>> qualityTable(numRows, vector<double>(numCols, 0.0));
+		// for (int coarseModelId = 0; coarseModelId < numCoarseModels; coarseModelId++) {
+		// 	outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseModelId] + "/";
+		// 	cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseModelId] + ".ply";
+		// 	cout << "coarse model " << cmodelPath << endl;
+		// 	reprojMT.updateCoarseModel(cmodelPath);
+		// 	reprojMT.updateDirectory(outDir);
+		// 	for (int renderOptId = 0; renderOptId < numRenderOption; renderOptId++) {
+		// 		int renderOption = renderOptions[renderOptId];
+		// 		reprojMT.updateRenderOption(renderOption);
+		// 		auto res = reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);
+		// 		int rowId = coarseModelId * numRenderOption + renderOptId;
+		// 		qualityTable[rowId][0] = coarseModelId;
+		// 		qualityTable[rowId][1] = renderOption;
+		// 		qualityTable[rowId][2] = res[0];
+		// 		qualityTable[rowId][3] = res[1];
+		// 		qualityTable[rowId][4] = res[2];
+
+		// 		if (1) {
+		// 			cout << "result " << endl;
+		// 			for (auto v : res) {
+		// 				cout << v << " ";
+		// 			}
+		// 			cout << endl;
+		// 		}
+		// 	}
+		// }
+
+        // string ofileName = RESULTDIR + MODELNAMES[modelId] + "/" + MODELNAMES[modelId] + "_" + "model_renderOption_missratio_faster.csv";
+		// cout << "saving excel "<<ofileName << endl;
+		// ofstream ofile(ofileName);
+		// write_csv(qualityTable, numRows, numCols, ofile);
+		// ofile.close();
 
 	}
     if(0)
@@ -532,7 +539,7 @@ int main(int argc, char* argv[])
         write_csv(qualityTable, numRows, numCols, ofile);
         ofile.close();
     }
-    if(1)
+    if(0)
     {
         // graph PSNR/SSIM vs(rotation), legend: s1t1, t1s1
         // Shader usage: vs"reprojMultiTargetMultiOption.vs" fs"reprojMultiTargetMultiOption.fs"
