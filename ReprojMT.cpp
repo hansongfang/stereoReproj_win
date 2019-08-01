@@ -352,7 +352,7 @@ void ReprojMT::updateReprojMTShader(int numTarget, const vector<int>& targetIds,
     string temp;
     for (int i = 0; i < numTarget; i++) {
         int targetId = targetIds[i];
-        cout<<"setting reference "<<targetId<<endl;
+        //cout<<"setting reference "<<targetId<<endl;
         auto fullTransform = _targetMVPS[targetId].Projection * _targetMVPS[targetId].worldView * _targetMVPS[targetId].modelWorld;
         temp = "cacheFullTransform[" + to_string(i) + "]";
         _reprojShaderMT.setMat4(temp, (float*)&fullTransform[0][0]);
@@ -428,7 +428,7 @@ vector<float> ReprojMT::oneEyeOneRefCacheReuse(int freshCount, float threshold, 
     int countPSNR = 0;
     cv::Mat repMat, gdMat;
     vector<int> targetIds(numRef, 0); // track the reference images  
-    cout<<"targetIds size: "<<targetIds.size()<<endl;
+    // cout<<"targetIds size: "<<targetIds.size()<<endl;
     int count = freshCount; // reduce 1 when reproj, when 0 render  
     for(int frameId = numRef; frameId < _numFrames; frameId ++){
         //getchar();
@@ -463,9 +463,9 @@ vector<float> ReprojMT::oneEyeOneRefCacheReuse(int freshCount, float threshold, 
                 int index = i-1;
                 targetIds[index] = (curId - i + _numTargets) % _numTargets;//!!! easy to make error
                 temp += to_string(targetIds[index])+" ";
-                cout<<"setting targetIds index"<<index<<" id: "<<(curId - i + _numTargets) % _numTargets<<endl;
+                //cout<<"setting targetIds index"<<index<<" id: "<<(curId - i + _numTargets) % _numTargets<<endl;
             }
-            cout<<"curId: "<<curId<<" refId: "<<temp<<endl;
+            //cout<<"curId: "<<curId<<" refId: "<<temp<<endl;
 
             setMVP(frameId, renderLeft, _targetMVPS[curId]);
             glBindFramebuffer(GL_FRAMEBUFFER, _targetFBOS[curId].gBuffer);
