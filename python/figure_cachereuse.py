@@ -9,7 +9,8 @@ if __name__=="__main__":
     coarseDI_file = join(res_dir, "Lucy5k_left_frame2_coarseDepth_F0.png")
     fineDI_file = join(res_dir, "Lucy5k_left_frame2_fineDepth_F0.png")
     gt_file = join(res_dir, "gt_left_frame2.png")
-    out_file1 = join(res_dir, "cachereuse.png")
+    out_file1 = join(res_dir, "eq6.png")
+    out_file2 = join(res_dir, "eq6_diff.png")
     diff_file = join(res_dir, "cachereuseDiff.png")
 
     coarseDI = cv2.imread(coarseDI_file).astype(np.float)
@@ -34,5 +35,8 @@ if __name__=="__main__":
     crop_diff_fineD_coarseDI = crop_diff_fineD_coarseDI[:, :, ::-1]
     crop_diffIs = np.concatenate((crop_diff_coarseDI, crop_diff_fineDI, crop_diff_fineD_coarseDI), axis=1)
     cv2.imwrite(diff_file, crop_diffIs)
+
+    out_I_v2 = np.concatenate((out_I_v1, crop_diffIs), axis=0)
+    cv2.imwrite(out_file2, out_I_v2.astype(np.uint8))
 
 
