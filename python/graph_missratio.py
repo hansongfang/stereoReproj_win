@@ -53,7 +53,7 @@ def plot_missratio_groupbar():
     xticks_list = allLegend[modelName[modelId]]
     plot_renderOption_bar(renderOptData, ylabel='missratio', xticks_list=xticks_list)
     outFile = join(rootDir, modelName[modelId],
-                   modelName[modelId] + "_missratio_.png")
+                   modelName[modelId] + "_missratio_faster_earlyZ.png")
     plt.savefig(outFile, bbox_inches='tight')
     plt.show()
 
@@ -78,12 +78,13 @@ if __name__=="__main__":
     renderOpts = [0, 1, 2, 3, 4]
     renderLabels = ['F1', 'F0', 'F0F1', 'F0F1F2', 'F0F1F2F3']
     qualityOpt = ['missratio']
-    qualityOffset = 2 # missratio
+    qualityOffset = 2 # missratiog
 
-    modelId = 0
-    resolutionId = 2
-    rootDir = "/Users/sfhan/Dropbox/stereoRepoj/Results"
-    datafile = join(rootDir, modelName[modelId], modelName[modelId] + "_model_renderOption_missratio.csv")
-    data = readCSV(datafile)
+    for modelId in range(4):
+        #modelId = 0
+        resolutionId = 2
+        rootDir = "/Users/sfhan/Dropbox/stereoRepoj/Results"
+        datafile = join(rootDir, modelName[modelId], modelName[modelId] + "_model_renderOption_missratio_faster_earlyZ.csv")
+        data = readCSV(datafile)
 
-    plot_missratio_groupbar()
+        plot_missratio_groupbar()
