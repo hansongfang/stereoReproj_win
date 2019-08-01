@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
                                 "Armadillo25k_o", "Armadillo35k" };
     MODELS[3] = vector<string>{ "bunny1k_o", "bunny3k_o", "bunny5k_o", "bunny10k_o", "bunny25k_o", "bunny70k" };
 
-    if(0){
+    if(1){
         //-----------------------------input---------------------------------------------------------//
         //int modelId = 0;
 		int oriResId = 5;
@@ -395,7 +395,7 @@ int main(int argc, char* argv[])
 		//        write_csv(qualityTable2, numRows, numCols_time, ofile);
 		//        ofile.close();
 	}
-	if(1){
+	if(0){
 		// cache miss ratio
 		// bar graph (resolution, rendermode) -> cache miss ratio
 		// uncomment  //layout(early_fragment_tests) in;
