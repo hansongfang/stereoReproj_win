@@ -460,9 +460,10 @@ vector<float> ReprojMT::oneEyeOneRefCacheReuse(int freshCount, float threshold, 
             // reproj
             string temp;
             for (int i = 1; i <= numRef; i++) {
-                targetIds[i-1] = (curId - i + _numTargets) % _numTargets;//!!! easy to make error
-                temp += to_string(targetIds[i])+" ";
-                cout<<"setting targetIds index"<<i<<" id: "<<(curId - i + _numTargets) % _numTargets<<endl;
+                int index = i-1;
+                targetIds[index] = (curId - i + _numTargets) % _numTargets;//!!! easy to make error
+                temp += to_string(targetIds[index])+" ";
+                cout<<"setting targetIds index"<<index<<" id: "<<(curId - i + _numTargets) % _numTargets<<endl;
             }
             cout<<"curId: "<<curId<<" refId: "<<temp<<endl;
 
