@@ -431,7 +431,7 @@ vector<float> ReprojMT::oneEyeOneRefCacheReuse(int freshCount, float threshold, 
     cout<<"targetIds size: "<<targetIds.size()<<endl;
     int count = freshCount; // reduce 1 when reproj, when 0 render  
     for(int frameId = numRef; frameId < _numFrames; frameId ++){
-        getchar();
+        //getchar();
         int curId = frameId % _numTargets;
         // reproj/render -> to which FBO & MVP
         if(count == 0){

@@ -247,7 +247,8 @@ void main()
   if(renderOption == 1){
     if(repDiff[0] < threshold && repDiff[0] > epsilon){
       color = vec4(repColor[0], 1.0);
-      color.w = fragDepth;
+      //color.w = fragDepth;
+      color.w = cachingDepth[0];
     }
     else if(repDiff[0] >= threshold){
       uint counter2 = atomicCounterIncrement(ac_frag2);
