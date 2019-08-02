@@ -152,7 +152,7 @@ int main(int argc, char* argv[])
         string outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + "/";
         int numFrames = 100;
 
-		int numTargets = 3;
+		int numTargets = 10;
 		int numRef = 1;
         int renderOptId =1;
 
