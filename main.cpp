@@ -169,7 +169,7 @@ int main(int argc, char* argv[])
 		reprojMT.updateQuality(measureQuality);
         reprojMT.updateRenderOption(renderOptId);
 		int freshCount = 2;
-		reprojMT.oneEyeOneRefCacheReuse(freshCount, numRef, thresholdVal, leftPrimary, debug);
+		reprojMT.oneEyeOneRefRenderCacheReuse(freshCount, numRef, thresholdVal, leftPrimary, debug);
 		
 		// int numCoarseModels = 6;
 		// vector<int> freshCounts = {1, 2, 3, 4, 5, 6, 7, 8};
