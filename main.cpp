@@ -87,30 +87,32 @@ int main(int argc, char* argv[])
 
 		int numTargets = 3;
 		int freshCount = 2;
+		int numRef = 1;
+        int renderOptId =1;
+		
 		ReprojMT reprojMT(WINDOWWIDTH, WINDOWHEIGHT);
         reprojMT.init(fmodelPath, cmodelPath, numTargets, numFrames, outDir);
         reprojMT.setPath(1, 1, 2);
 		//reprojMT.setPath3(1, 1, 2, 200, 300, 200);
 
 		//-------------------render option----------------------------------//
-        int renderOptId =1;
         float thresholdVal = 0.0016;
         bool leftPrimary = true;
         bool debug = true;
         bool measureQuality = true;
 		reprojMT.updateQuality(measureQuality);
         reprojMT.updateRenderOption(renderOptId);
-		//reprojMT.oneEyeOneRefCacheReuse(freshCount, thresholdVal, leftPrimary, debug);
+		reprojMT.oneEyeOneRefCacheReuse(freshCount, thresholdVal, leftPrimary, debug);
 		
-		int numCoarseModels = 6;
-		for (int coarseModelId = 0; coarseModelId < numCoarseModels; coarseModelId++) {
-			outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseModelId] + "/";
-			cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseModelId] + ".ply";
-			cout << "coarse model " << cmodelPath << endl;
-			reprojMT.updateCoarseModel(cmodelPath);
-			reprojMT.updateDirectory(outDir);
-			reprojMT.oneEyeOneRefCacheReuse(freshCount, thresholdVal, leftPrimary, debug);
-		}
+		// int numCoarseModels = 6;
+		// for (int coarseModelId = 0; coarseModelId < numCoarseModels; coarseModelId++) {
+		// 	outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseModelId] + "/";
+		// 	cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseModelId] + ".ply";
+		// 	cout << "coarse model " << cmodelPath << endl;
+		// 	reprojMT.updateCoarseModel(cmodelPath);
+		// 	reprojMT.updateDirectory(outDir);
+		// 	reprojMT.oneEyeOneRefCacheReuse(freshCount, thresholdVal, leftPrimary, debug);
+		// }
 
 	}
 	if (0) {

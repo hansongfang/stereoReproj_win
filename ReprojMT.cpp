@@ -378,12 +378,12 @@ void ReprojMT::updateReprojMTShader(int numTarget, const vector<int>& targetIds,
     }
 }
 
-vector<float> ReprojMT::oneEyeOneRefCacheReuse(int freshCount, float threshold, bool leftPrimary, bool debug)
+vector<float> ReprojMT::oneEyeOneRefCacheReuse(int freshCount, int numRef, float threshold, bool leftPrimary, bool debug)
 {
     // every (render/reproj) is written to targetFBO, reproj from old targetFBO
     // render, render->cache1, cache1->cache2, render, ...
     // targetFBO & targetMVP
-    int numRef = 1;
+    // int numRef = 1;
     bool savePNG = true;
     bool usePhong = true;
     _measureQuality = true;
