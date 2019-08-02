@@ -41,6 +41,9 @@ public:
     vector<float> oneEyeOneRefCacheReuse(int freshCount, int numRef,
     float threshold, bool leftPrimary, bool debug);
 
+    vector<float> oneEyeOneRefRenderCacheReuse(int freshCount, int numRef,
+    float threshold, bool leftPrimary, bool debug);
+
     void updateModels(string fMeshPath, string cMeshPath);
     void updateCoarseModel(string cMeshPath);
     void updateShaderComplex(int loopVS, int loopFS);

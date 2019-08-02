@@ -77,7 +77,7 @@ int main(int argc, char* argv[])
         reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);
 		//reprojMT.renderReprojMT(thresholdVal, !leftPrimary, enableFlip, debug);
     }
-	if(1){
+	if(0){
 		// test oneEyeOneCacheReuse, render->cache1, cache1->cache2, render, ...
 		int oriResId = 5;
         string fmodelPath = MODELDIR + MODELNAMES[modelId] +"/"+ MODELS[modelId][oriResId]+".ply";
@@ -140,6 +140,73 @@ int main(int argc, char* argv[])
 		ofstream ofile(ofileName);
 		write_csv(qualityTable, numRows, numCols, ofile);
 		ofile.close();
+
+	}
+	if(1){
+		// test oneEyeOneCacheReuse, render->cache1, render->cache2, render->cache3, ...
+		// compared to, always use the rendered one as reference
+		// current version only support one reference
+		int oriResId = 5;
+        string fmodelPath = MODELDIR + MODELNAMES[modelId] +"/"+ MODELS[modelId][oriResId]+".ply";
+        string cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + ".ply";
+        string outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + "/";
+        int numFrames = 100;
+
+		int numTargets = 3;
+		int numRef = 1;
+        int renderOptId =1;
+
+		ReprojMT reprojMT(WINDOWWIDTH, WINDOWHEIGHT);
+        reprojMT.init(fmodelPath, cmodelPath, numTargets, numFrames, outDir);
+        reprojMT.setPath(1, 1, 2);
+		//reprojMT.setPath3(1, 1, 2, 200, 300, 200);
+
+		//-------------------render option----------------------------------//
+        float thresholdVal = 0.0016;
+        bool leftPrimary = true;
+        bool debug = true;
+        bool measureQuality = true;
+		reprojMT.updateQuality(measureQuality);
+        reprojMT.updateRenderOption(renderOptId);
+		int freshCount = 2;
+		reprojMT.oneEyeOneRefCacheReuse(freshCount, numRef, thresholdVal, leftPrimary, debug);
+		
+		// int numCoarseModels = 6;
+		// vector<int> freshCounts = {1, 2, 3, 4, 5, 6, 7, 8};
+		// int numFreshcounts = 8;
+		// int numRows = numCoarseModels * numFreshcounts;
+		// int numCols = 2 + 2;
+		// vector<vector<double>> qualityTable(numRows, vector<double>(numCols, 0.0));
+		// for (int coarseModelId = 0; coarseModelId < numCoarseModels; coarseModelId++) {
+		// 	outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseModelId] + "/";
+		// 	cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseModelId] + ".ply";
+		// 	cout << "coarse model " << cmodelPath << endl;
+		// 	reprojMT.updateCoarseModel(cmodelPath);
+		// 	reprojMT.updateDirectory(outDir);
+		// 	for(int i=0; i<numFreshcounts; i++){
+		// 		int freshcount = freshCounts[i];
+		// 		cout<<"fresh count: "<<freshcount<<endl;
+		// 		auto res = reprojMT.oneEyeOneRefCacheReuse(freshCount, numRef, thresholdVal, leftPrimary, debug);
+		// 		int rowId = coarseModelId * numFreshcounts + i;
+		// 		qualityTable[rowId][0] = coarseModelId;
+		// 		qualityTable[rowId][1] = freshcount;
+		// 		qualityTable[rowId][2] = res[0];
+		// 		qualityTable[rowId][3] = res[1];
+		// 		if (1) {
+		// 			cout << "result " << endl;
+		// 			for (auto v : res) {
+		// 				cout << v << " ";
+		// 			}
+		// 			cout << endl;
+		// 		}
+		// 	}	
+		// }
+
+		// string ofileName = RESULTDIR + MODELNAMES[modelId] + "/" + MODELNAMES[modelId] + "_" + "model_freshcount_F0_refRender_quality.csv";
+		// cout << "save excel " << ofileName << endl;
+		// ofstream ofile(ofileName);
+		// write_csv(qualityTable, numRows, numCols, ofile);
+		// ofile.close();
 
 	}
 	if (0) {

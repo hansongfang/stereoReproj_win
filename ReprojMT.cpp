@@ -352,7 +352,7 @@ void ReprojMT::updateReprojMTShader(int numTarget, const vector<int>& targetIds,
     string temp;
     for (int i = 0; i < numTarget; i++) {
         int targetId = targetIds[i];
-        //cout<<"setting reference "<<targetId<<endl;
+        cout<<"setting reference "<<targetId<<endl;
         auto fullTransform = _targetMVPS[targetId].Projection * _targetMVPS[targetId].worldView * _targetMVPS[targetId].modelWorld;
         temp = "cacheFullTransform[" + to_string(i) + "]";
         _reprojShaderMT.setMat4(temp, (float*)&fullTransform[0][0]);
@@ -466,6 +466,156 @@ vector<float> ReprojMT::oneEyeOneRefCacheReuse(int freshCount, int numRef, float
                 //cout<<"setting targetIds index"<<index<<" id: "<<(curId - i + _numTargets) % _numTargets<<endl;
             }
             //cout<<"curId: "<<curId<<" refId: "<<temp<<endl;
+
+            setMVP(frameId, renderLeft, _targetMVPS[curId]);
+            glBindFramebuffer(GL_FRAMEBUFFER, _targetFBOS[curId].gBuffer);
+			glViewport(0, 0, windowWidth, windowHeight);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            updateReprojMTShader(numRef, targetIds, _targetMVPS[curId]);
+            _coarseA->Draw(_reprojShaderMT);
+            if (debug) {
+                this->saveFigure(savePNG, frameId, thresholdDir, renderLeft);
+            }
+            auto reprojBuffer = _window->getFrameBuffer();
+            repMat = cv::Mat(windowHeight, windowWidth, CV_8UC3, &reprojBuffer[0]);
+            cv::flip(repMat, repMat, 0);
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+            if(_measureQuality){
+				glBindFramebuffer(GL_FRAMEBUFFER, _renderFBO.gBuffer);
+				glViewport(0, 0, windowWidth, windowHeight);
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                if(usePhong){
+                    updatePhongShader(_targetMVPS[curId]);
+                    _a->Draw(_phongShader);
+                }
+                else{
+                    updateNoiseShader(_targetMVPS[curId]);
+                    _a->Draw(_noiseShader);
+                }
+                //_window->aftRender();
+                if(debug){
+                    this->saveGTFigure(savePNG, frameId, thresholdDir, renderLeft);
+                }
+                auto gdBuffer = _window->getFrameBuffer();
+                gdMat = cv::Mat(windowHeight, windowWidth, CV_8UC3, &gdBuffer[0]);
+                cv::flip(gdMat, gdMat, 0);
+				glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+                auto quality = _quality.computeQualityMat(repMat, gdMat);
+                avgPSNR += quality.second;
+                avgSSIM += quality.first;
+                countPSNR += 1;
+            }
+            count --;
+        }
+    }
+    if(_measureQuality){
+        avgPSNR /= countPSNR;
+        avgSSIM /= countPSNR;
+		avgMissRatio /= countPSNR;
+        cout<<"psnr "<<avgPSNR<<" ssim "<<avgSSIM<<" missratio "<<avgMissRatio<<endl;
+    }
+    return vector<float>{avgPSNR, avgSSIM, avgMissRatio};
+}
+
+vector<float> ReprojMT::oneEyeOneRefRenderCacheReuse(int freshCount, int numRef, float threshold, bool leftPrimary, bool debug)
+{
+    // every (render/reproj) is written to targetFBO, reproj from old targetFBO
+    // render, render->cache1, cache1->cache2, render, ...
+    // targetFBO & targetMVP
+    // int numRef = 1;
+    assert(numRef==1);
+    assert(_renderOption==1);
+
+    bool savePNG = true;
+    bool usePhong = true;
+    _measureQuality = true;
+    float thresholdId = threshold / 0.0001;
+    string thresholdDir = _directory + to_string(int(round(thresholdId))) + "/";
+    cout <<"save result in "<< thresholdDir<< endl;
+    cout<<"use render option "<<_renderOption<<endl;
+
+    assert(_numTargets == 3);
+    assert(_renderOption == 1);
+    
+    _reprojShaderMT.use();
+    _reprojShaderMT.setFloat("threshold", threshold);
+    _reprojShaderMT.setFloat("epsilon", -0.0002);
+    _reprojShaderMT.setBool("usePhong", usePhong);
+
+    bool renderLeft = leftPrimary;
+    int renderId;
+    // prepare first frame 
+    for(int frameId =0; frameId < numRef; frameId ++){
+        int curId = frameId;
+        renderId = curId;
+        setMVP(frameId, renderLeft, _targetMVPS[curId]);
+        glBindFramebuffer(GL_FRAMEBUFFER, _targetFBOS[curId].gBuffer);
+		glViewport(0, 0, windowWidth, windowHeight);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        if(usePhong){
+            updatePhongShader(_targetMVPS[curId]);
+            _a->Draw(_phongShader);
+        }
+        else{
+            updateNoiseShader(_targetMVPS[curId]);
+            _a->Draw(_noiseShader);
+        }
+        if (debug) {
+            this->saveFigure(savePNG, frameId, thresholdDir, renderLeft);
+        }
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    // start
+    float avgPSNR = 0.0, avgSSIM = 0.0;
+	float avgMissRatio = 0.0;
+    int countPSNR = 0;
+    
+    cv::Mat repMat, gdMat;
+    vector<int> targetIds(numRef, 0); // track the reference images  
+    cout<<"targetIds size: "<<targetIds.size()<<endl;
+    int count = freshCount; // reduce 1 when reproj, when 0 render  
+    for(int frameId = numRef; frameId < _numFrames; frameId ++){
+        //getchar();
+        int curId = frameId % _numTargets;
+        // reproj/render -> to which FBO & MVP
+        if(count == 0){
+            renderId = curId;
+			cout << "render " << curId << endl;
+            // when fresh 
+            setMVP(frameId, renderLeft, _targetMVPS[curId]);
+            glBindFramebuffer(GL_FRAMEBUFFER, _targetFBOS[curId].gBuffer);
+			glViewport(0, 0, windowWidth, windowHeight);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            if(usePhong){
+                updatePhongShader(_targetMVPS[curId]);
+                _a->Draw(_phongShader);
+            }
+            else{
+                updateNoiseShader(_targetMVPS[curId]);
+                _a->Draw(_noiseShader);
+            }
+            if (debug) {
+                this->saveFigure(savePNG, frameId, thresholdDir, renderLeft);
+            }
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            // render
+            count = freshCount;
+        }
+        else{
+            // reproj
+            string temp;
+            // for (int i = 1; i <= numRef; i++) {
+            //     int index = i-1;
+            //     targetIds[index] = (curId - i + _numTargets) % _numTargets;//!!! easy to make error
+            //     temp += to_string(targetIds[index])+" ";
+            //     //cout<<"setting targetIds index"<<index<<" id: "<<(curId - i + _numTargets) % _numTargets<<endl;
+            // }
+            targetIds[0] = renderId;
+            temp = to_string(targetIds[0]);
+            cout<<"curId: "<<curId<<" refId: "<<temp<<endl;
 
             setMVP(frameId, renderLeft, _targetMVPS[curId]);
             glBindFramebuffer(GL_FRAMEBUFFER, _targetFBOS[curId].gBuffer);
