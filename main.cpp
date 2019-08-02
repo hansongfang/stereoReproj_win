@@ -102,7 +102,7 @@ int main(int argc, char* argv[])
         bool measureQuality = true;
 		reprojMT.updateQuality(measureQuality);
         reprojMT.updateRenderOption(renderOptId);
-		reprojMT.oneEyeOneRefCacheReuse(freshCount, thresholdVal, leftPrimary, debug);
+		reprojMT.oneEyeOneRefCacheReuse(freshCount, numRef, thresholdVal, leftPrimary, debug);
 		
 		// int numCoarseModels = 6;
 		// for (int coarseModelId = 0; coarseModelId < numCoarseModels; coarseModelId++) {
@@ -111,7 +111,7 @@ int main(int argc, char* argv[])
 		// 	cout << "coarse model " << cmodelPath << endl;
 		// 	reprojMT.updateCoarseModel(cmodelPath);
 		// 	reprojMT.updateDirectory(outDir);
-		// 	reprojMT.oneEyeOneRefCacheReuse(freshCount, thresholdVal, leftPrimary, debug);
+		// 	reprojMT.oneEyeOneRefCacheReuse(freshCount, numRef, thresholdVal, leftPrimary, debug);
 		// }
 
 	}
