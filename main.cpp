@@ -119,7 +119,7 @@ int main(int argc, char* argv[])
 			for(int i=0; i<numFreshcounts; i++){
 				int freshcount = freshCounts[i];
 				cout<<"fresh count: "<<freshcount<<endl;
-				auto res = reprojMT.oneEyeOneRefCacheReuse(freshCount, numRef, thresholdVal, leftPrimary, debug);
+				auto res = reprojMT.oneEyeOneRefCacheReuse(freshcount, numRef, thresholdVal, leftPrimary, debug);
 				int rowId = coarseModelId * numFreshcounts + i;
 				qualityTable[rowId][0] = coarseModelId;
 				qualityTable[rowId][1] = freshcount;
@@ -168,8 +168,8 @@ int main(int argc, char* argv[])
         bool measureQuality = true;
 		reprojMT.updateQuality(measureQuality);
         reprojMT.updateRenderOption(renderOptId);
-		int freshCount = 2;
-		reprojMT.oneEyeOneRefRenderCacheReuse(freshCount, numRef, thresholdVal, leftPrimary, debug);
+		int freshcount = 2;
+		reprojMT.oneEyeOneRefRenderCacheReuse(freshcount, numRef, thresholdVal, leftPrimary, debug);
 		
 		// int numCoarseModels = 6;
 		// vector<int> freshCounts = {1, 2, 3, 4, 5, 6, 7, 8};
