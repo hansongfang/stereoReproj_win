@@ -101,45 +101,45 @@ int main(int argc, char* argv[])
         bool measureQuality = true;
 		reprojMT.updateQuality(measureQuality);
         reprojMT.updateRenderOption(renderOptId);
-		int freshCount = 10;
-		reprojMT.oneEyeOneRefCacheReuse(freshCount, numRef, thresholdVal, leftPrimary, debug);
+		// int freshCount = 10;
+		// reprojMT.oneEyeOneRefCacheReuse(freshCount, numRef, thresholdVal, leftPrimary, debug);
 		
-		// int numCoarseModels = 6;
-		// vector<int> freshCounts = {1, 2, 3, 4, 5, 6, 7, 8};
-		// int numFreshcounts = 8;
-		// int numRows = numCoarseModels * numFreshcounts;
-		// int numCols = 2 + 2;
-		// vector<vector<double>> qualityTable(numRows, vector<double>(numCols, 0.0));
-		// for (int coarseModelId = 0; coarseModelId < numCoarseModels; coarseModelId++) {
-		// 	outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseModelId] + "/";
-		// 	cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseModelId] + ".ply";
-		// 	cout << "coarse model " << cmodelPath << endl;
-		// 	reprojMT.updateCoarseModel(cmodelPath);
-		// 	reprojMT.updateDirectory(outDir);
-		// 	for(int i=0; i<numFreshcounts; i++){
-		// 		int freshcount = freshCounts[i];
-		// 		cout<<"fresh count: "<<freshcount<<endl;
-		// 		auto res = reprojMT.oneEyeOneRefCacheReuse(freshCount, numRef, thresholdVal, leftPrimary, debug);
-		// 		int rowId = coarseModelId * numFreshcounts + i;
-		// 		qualityTable[rowId][0] = coarseModelId;
-		// 		qualityTable[rowId][1] = freshcount;
-		// 		qualityTable[rowId][2] = res[0];
-		// 		qualityTable[rowId][3] = res[1];
-		// 		if (1) {
-		// 			cout << "result " << endl;
-		// 			for (auto v : res) {
-		// 				cout << v << " ";
-		// 			}
-		// 			cout << endl;
-		// 		}
-		// 	}	
-		// }
+		int numCoarseModels = 6;
+		vector<int> freshCounts = {1, 2, 3, 4, 5, 6, 7, 8};
+		int numFreshcounts = 8;
+		int numRows = numCoarseModels * numFreshcounts;
+		int numCols = 2 + 2;
+		vector<vector<double>> qualityTable(numRows, vector<double>(numCols, 0.0));
+		for (int coarseModelId = 0; coarseModelId < numCoarseModels; coarseModelId++) {
+			outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseModelId] + "/";
+			cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseModelId] + ".ply";
+			cout << "coarse model " << cmodelPath << endl;
+			reprojMT.updateCoarseModel(cmodelPath);
+			reprojMT.updateDirectory(outDir);
+			for(int i=0; i<numFreshcounts; i++){
+				int freshcount = freshCounts[i];
+				cout<<"fresh count: "<<freshcount<<endl;
+				auto res = reprojMT.oneEyeOneRefCacheReuse(freshCount, numRef, thresholdVal, leftPrimary, debug);
+				int rowId = coarseModelId * numFreshcounts + i;
+				qualityTable[rowId][0] = coarseModelId;
+				qualityTable[rowId][1] = freshcount;
+				qualityTable[rowId][2] = res[0];
+				qualityTable[rowId][3] = res[1];
+				if (1) {
+					cout << "result " << endl;
+					for (auto v : res) {
+						cout << v << " ";
+					}
+					cout << endl;
+				}
+			}	
+		}
 
-		// string ofileName = RESULTDIR + MODELNAMES[modelId] + "/" + MODELNAMES[modelId] + "_" + "model_freshcount_F0_quality.csv";
-		// cout << "save excel " << ofileName << endl;
-		// ofstream ofile(ofileName);
-		// write_csv(qualityTable, numRows, numCols, ofile);
-		// ofile.close();
+		string ofileName = RESULTDIR + MODELNAMES[modelId] + "/" + MODELNAMES[modelId] + "_" + "model_freshcount_F0_quality.csv";
+		cout << "save excel " << ofileName << endl;
+		ofstream ofile(ofileName);
+		write_csv(qualityTable, numRows, numCols, ofile);
+		ofile.close();
 
 	}
 	if (0) {
