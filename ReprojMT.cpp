@@ -435,7 +435,7 @@ vector<float> ReprojMT::oneEyeOneRefCacheReuse(int freshCount, int numRef, float
         int curId = frameId % _numTargets;
         // reproj/render -> to which FBO & MVP
         if(count == 0){
-			cout << "render " << curId << endl;
+			//cout << "render " << curId << endl;
             // when fresh 
             setMVP(frameId, renderLeft, _targetMVPS[curId]);
             glBindFramebuffer(GL_FRAMEBUFFER, _targetFBOS[curId].gBuffer);

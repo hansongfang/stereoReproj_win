@@ -86,7 +86,6 @@ int main(int argc, char* argv[])
         int numFrames = 100;
 
 		int numTargets = 5;
-		int freshCount = 2;
 		int numRef = 1;
         int renderOptId =1;
 
@@ -102,6 +101,7 @@ int main(int argc, char* argv[])
         bool measureQuality = true;
 		reprojMT.updateQuality(measureQuality);
         reprojMT.updateRenderOption(renderOptId);
+		int freshCount = 10;
 		reprojMT.oneEyeOneRefCacheReuse(freshCount, numRef, thresholdVal, leftPrimary, debug);
 		
 		// int numCoarseModels = 6;
