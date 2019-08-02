@@ -53,7 +53,7 @@ def plot_freshrate_groupbar():
         xticks_list = allLegend[modelName[modelId]]
         plot_freshrate_bar(renderOptData, ylabel=qualityLabel, xticks_list=xticks_list)
         outFile = join(rootDir, modelName[modelId],
-                       modelName[modelId] + "_freshrate_{}.png".format(qualityLabel))
+                       modelName[modelId] + "_freshrate_refRender_{}.png".format(qualityLabel))
         plt.savefig(outFile, bbox_inches='tight')
         plt.show()
 
@@ -83,6 +83,6 @@ if __name__=="__main__":
     for modelId in range(4):
         #modelId = 0
         rootDir = "/Users/sfhan/Dropbox/stereoRepoj/Results"
-        datafile = join(rootDir, modelName[modelId], modelName[modelId] + "_model_freshcount_F0_quality.csv")
+        datafile = join(rootDir, modelName[modelId], modelName[modelId] + "_model_freshcount_F0_refRender_quality.csv")
         data = readCSV(datafile)
         plot_freshrate_groupbar()
