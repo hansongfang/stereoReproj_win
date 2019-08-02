@@ -655,7 +655,7 @@ void ReprojMT::saveFigure(bool savePNG, int frameId, const string &thresholdDir,
         filename += ".png";
     else
         filename += ".jpg";
-    cout<<"save figure "<<filename<<endl;
+    //cout<<"save figure "<<filename<<endl;
     if(savePNG)
         _window->saveFramebuffer(filename, "png", PNG_DEFAULT);
     else
@@ -673,7 +673,7 @@ void ReprojMT::saveGTFigure(bool savePNG, int frameId, const string &thresholdDi
         filename += ".png";
     else
         filename += ".jpg";
-    cout<<"save figure "<<filename<<endl;
+    //cout<<"save figure "<<filename<<endl;
     if(savePNG)
         _window->saveFramebuffer(filename, "png", PNG_DEFAULT);
     else
