@@ -8,6 +8,7 @@ import numpy as np
 from os.path import join
 from utils import readCSV
 import seaborn as sns
+from matplotlib.ticker import FormatStrFormatter
 
 
 def getData(resolutionId, freshOptId, qualityOffset):
@@ -28,16 +29,6 @@ def plot_freshrate_bar(renderOptData, ylabel, xticks_list):
     total_width = 0.8
     bar_width = total_width / numFreshOption
 
-
-    # sns.set(style='darkgrid')
-    # sns.set_context("talk")
-
-    sns.set(style="whitegrid")
-    sns.set_context("paper")
-
-    fig = plt.figure(figsize=(4, 3))
-    plt.tight_layout()
-
     colors = ['C0', 'C1', 'C2', 'C3', 'y', 'C9', 'C7']
     for id in range(numFreshOption):
         plt.bar(x + bar_width * id, renderOptData[id, :], width=bar_width, label=freshLabels[id], color=colors[id])
@@ -45,16 +36,31 @@ def plot_freshrate_bar(renderOptData, ylabel, xticks_list):
     high = np.max(renderOptData)
     plt.ylim([low - 0.5 * (high - low), high + 0.5 * (high - low)])
     plt.ylabel(ylabel, fontsize=8)
-    plt.yticks(fontsize=6)
-    plt.xlabel('resolution', fontsize=8)
-    plt.xticks(x + 2.5 * bar_width, xticks_list, fontsize=6)
+    plt.yticks(fontsize=7)
+    plt.xlabel('Resolution', fontsize=8)
+    plt.xticks(x + 2.5 * bar_width, xticks_list, fontsize=7)
     plt.legend(fontsize=7, loc='upper left')
 
 
 
 def plot_freshrate_groupbar():
+    sns.set(style="whitegrid")
+    sns.set_context("paper")
+
+    # sns.set(style='darkgrid')
+    # sns.set_context("talk")
+
     """(resolution, freshrate) -> missratio, groupbar"""
     for qualityId in range(2):
+        plt.figure(figsize=(4, 3))
+
+        if qualityId == 0:
+            ax = plt.gca()
+            ax.yaxis.set_major_formatter(FormatStrFormatter('%d'))
+        elif qualityId == 1:
+            ax = plt.gca()
+            ax.yaxis.set_major_formatter(FormatStrFormatter('%.3f'))
+
         qualityLabel = qualityOpt[qualityId]
 
         renderOptData = np.zeros((len(freshOptIds), numResolution))
@@ -62,14 +68,14 @@ def plot_freshrate_groupbar():
             freshId = freshOptIds[x]
             for resolutionId in range(numResolution):
                 renderOptData[x, resolutionId] = getData(resolutionId, freshId, qualityOffset=qualityId)
-        # Check the data
         xticks_list = allLegend[modelName[modelId]]
         plot_freshrate_bar(renderOptData, ylabel=qualityLabel, xticks_list=xticks_list)
-        outFile = join(rootDir, modelName[modelId],
-                       modelName[modelId] + "_freshrate_{}.pdf".format(qualityLabel))
-        # outFile = join(rootDir, modelName[modelId], modelName[modelId] + "_freshrate_refRender_{}.pdf".format(qualityLabel))
-        # plt.savefig(outFile, bbox_inches='tight')
+        # outFile = join(rootDir, modelName[modelId],
+        #                modelName[modelId] + "_freshrate_{}.pdf".format(qualityLabel))
+        outFile = join(rootDir, modelName[modelId], modelName[modelId] + "_freshrate_refRender_{}.pdf".format(qualityLabel))
+        plt.tight_layout()
         plt.savefig(outFile)
+        print(outFile)
         plt.show()
 
 
@@ -84,21 +90,22 @@ if __name__=="__main__":
     numResolution = 6
 
     allLegend = dict()
-    allLegend['Lucy'] = ['1k', '3k', '5k', '10k', '25k', '100k']
-    allLegend['angel'] = ['1k', '3k', '5k', '10k', '25k', '50k']
-    allLegend['Armadillo'] = ['1k', '3k', '5k', '10k', '25k', '35k']
-    allLegend['bunny'] = ['1k', '3k', '5k', '10k', '25k', '70k']
+    allLegend['Lucy'] = ['1K', '3K', '5K', '10K', '25K', '100K']
+    allLegend['angel'] = ['1K', '3K', '5K', '10K', '25K', '50K']
+    allLegend['Armadillo'] = ['1K', '3K', '5K', '10K', '25K', '35K']
+    allLegend['bunny'] = ['1K', '3K', '5K', '10K', '25K', '70K']
     freshOptIds = [0, 1, 2, 3, 4]
     freshDim = 8
-    freshLabels = ['cache1', 'cache2', 'cache3', 'cache4', 'cache5']
-    qualityOpt = ['psnr', 'ssim']
+    freshLabels = ['Cache1', 'Cache2', 'Cache3', 'Cache4', 'Cache5']
+    qualityOpt = ['PSNR', 'SSIM']
     qualityOffset = 2
 
 
     for modelId in range(4):
         #modelId = 0
         rootDir = "/Users/sfhan/Dropbox/stereoRepoj/Results"
-        datafile = join(rootDir, modelName[modelId], modelName[modelId] + "_model_freshcount_F0_quality.csv")
-        # datafile = join(rootDir, modelName[modelId], modelName[modelId] + "_model_freshcount_F0_refRender_quality.csv")
+        # datafile = join(rootDir, modelName[modelId], modelName[modelId] + "_model_freshcount_F0_quality.csv")
+        datafile = join(rootDir, modelName[modelId], modelName[modelId] + "_model_freshcount_F0_refRender_quality.csv")
+        print(datafile)
         data = readCSV(datafile)
         plot_freshrate_groupbar()
