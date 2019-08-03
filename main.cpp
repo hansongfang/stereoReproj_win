@@ -80,6 +80,51 @@ int main(int argc, char* argv[])
 		cout << res[2] << " " << res[3] << endl;
 		getchar();
 	}
+	if(1){
+		// simple & vs // ps // both
+
+		int oriResId = 5;
+		string fmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][oriResId] + ".ply";
+		string cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + ".ply";
+		string outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + "/";
+		int numFrames = 30;
+
+		int numTargets = 4;
+		ReprojMT reprojMT(WINDOWHEIGHT, WINDOWWIDTH);
+		reprojMT.init(fmodelPath, cmodelPath, numTargets, numFrames, outDir);
+		reprojMT.setPath(2, 1, 2);
+
+		int renderOptId = 3;
+		float thresholdVal = 0.0016;
+		bool leftPrimary = true;
+		bool enableFlip = false;
+		bool debug = true;
+		bool measureQuality = true;
+		reprojMT.updateQuality(measureQuality);
+		reprojMT.updateRenderOption(renderOptId);
+
+		// resolution // (loopx & loopy)
+		vector<int> loopxOptions = {1, 50, 100};
+		vector<int> loopyOptions = {1, 50, 100};
+		int numCoarseModels = 6;
+		int numLoopx = 3;
+		int numLoopy = 3;
+		int numRows = numLoopx * numLoopy;
+		int numCols = 2 + numCoarseModels *3;
+		vector<vector<double>> qualityTable(numRenderOption * numThresholds, vector<double>(2 + numCoarseModels * 2, 0.0));
+		for(int loopxId){
+			for(int loopyId){
+				//update complexity
+				for(coarseModelId){
+					// update coarseModel
+					// get model PSNR, SSIM, renderingTime
+				}
+			}
+		}
+
+
+
+	}
 	if (0)
 	{
 		//(renderOpt, threshold) -> [(PSNR, SSIM)_1k, (PSNR, SSIM)_3k, (PSNR, SSIM)_5k, (PSNR, SSIM)_10k]
