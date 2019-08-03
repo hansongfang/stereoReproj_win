@@ -43,7 +43,7 @@ def plot_rotatePeriod_quality():
         plt.plot(rotatePeriod, y1, color='C0', marker='o', linestyle='-', linewidth=2, markersize=4)
         plt.plot(rotatePeriod, y2, color='C1', marker='o', linestyle='-', linewidth=2, markersize=4)
         plt.legend(['F0F1', 'F1F0'], fontsize=8)
-        plt.xlabel('Rotate Period', fontsize=8)
+        plt.xlabel('Rotation Period', fontsize=8)
         plt.xticks(fontsize=7)
         plt.xlim([0, 650])
         plt.ylabel(qualityOpt[qualityId], fontsize=8)
