@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from os.path import join
 from utils import readCSV
+import seaborn as sns
+from matplotlib.ticker import FormatStrFormatter
 
 def getData(renderOptId, thresholdId, resolutionId, qualityOffset):
     """
@@ -15,26 +17,49 @@ def getData(renderOptId, thresholdId, resolutionId, qualityOffset):
     numThreshold = len(thresholds)
     return data[renderOptId * numThreshold + thresholdId, 2 + resolutionId*2 + qualityOffset]
 
+
 def plot_threshold_resolution(renderOptId):
+    sns.set(style="whitegrid")
+    sns.set_context("paper")
+
     colors = ['C0', 'C1', 'C2', 'C3', 'y', 'C9', 'C7']
     thresholdX = np.array(thresholds)
     numThreshold = len(thresholdX)
     for qualityId in range(2):
+        fig = plt.figure(figsize=(4, 3))
+
+        if qualityId == 0:
+            ax = plt.gca()
+            ax.yaxis.set_major_formatter(FormatStrFormatter('%d'))
+        elif qualityId == 1:
+            ax = plt.gca()
+            ax.yaxis.set_major_formatter(FormatStrFormatter('%.3f'))
+
+
         qualityOffset = qualityId
         for resolutionId in range(numResolution):
             colId = 2 + resolutionId * 2 + qualityOffset
             tempData = data[renderOptId * numThreshold: (renderOptId+1)*numThreshold, colId]
             plt.plot(thresholdX, tempData, color=colors[resolutionId], linestyle='-', linewidth=1)
-        plt.legend(allLegend[modelName[modelId]])
+        plt.legend(allLegend[modelName[modelId]], fontsize=8)
+        plt.xticks(fontsize=7)
         # plt.title(modelName[modelId])
-        plt.xlabel("threshold")
-        plt.ylabel(qualityOpt[qualityId])
-        outFile = join(rootDir, modelName[modelId],
-        modelName[modelId] + "_" + qualityOpt[qualityId] + "_renderOpt" + str(renderOptId) + "_faster.png")
-        plt.savefig(outFile, bbox_inches='tight')
+        plt.xlabel("Threshold", fontsize=8)
+        plt.yticks(fontsize=7)
+        plt.ylabel(qualityOpt[qualityId], fontsize=8)
+        outFile = join(rootDir, modelName[modelId],modelName[modelId] + "_" + qualityOpt[qualityId] +
+                       "_renderOpt" + str(renderOptId) + "_faster.pdf")
+        # outFile = join(rootDir, modelName[modelId],
+        #                modelName[modelId] + "_" + qualityOpt[qualityId] + "_renderOpt" + str(renderOptId) + ".pdf")
+
+        plt.tight_layout()
+        print(outFile)
+        plt.savefig(outFile)
         plt.show()
 
+
 def plot_renderOption_bar(renderOptData, ylabel, xticks_list):
+
     numRenderOption = len(renderOpts)
     numCoarseModels = 6
     x = np.arange(numCoarseModels)
@@ -44,18 +69,31 @@ def plot_renderOption_bar(renderOptData, ylabel, xticks_list):
     colors = ['C0', 'C1', 'C2', 'C3', 'y', 'C9', 'C7']
     for id in range(numRenderOption):
         plt.bar(x + bar_width * id, renderOptData[id, :], width=bar_width, label=renderLabels[id], color=colors[id])
-    plt.xlabel('resolution')
     low = np.min(renderOptData)
     high = np.max(renderOptData)
     plt.ylim([low - 0.5 * (high - low), high + 0.5 * (high - low)])
-    plt.ylabel(ylabel)
-    # plt.title(title)
-    plt.xticks(x + 2.5 * bar_width, xticks_list)
-    plt.legend()
+    plt.ylabel(ylabel, fontsize=8)
+    plt.yticks(fontsize=7)
+    plt.xlabel('Resolution', fontsize=8)
+    plt.xticks(x + 2.5 * bar_width, xticks_list, fontsize=8)
+    plt.legend(fontsize=7)
+
 
 def plot_renderOption(thresholdId):
+    sns.set(style="whitegrid")
+    sns.set_context("paper")
+
     numRenderOption = len(renderOpts)
     for qualityId in range(2):
+        plt.figure(figsize=(4, 3))
+
+        if qualityId == 0:
+            ax = plt.gca()
+            ax.yaxis.set_major_formatter(FormatStrFormatter('%d'))
+        elif qualityId == 1:
+            ax = plt.gca()
+            ax.yaxis.set_major_formatter(FormatStrFormatter('%.3f'))
+
         renderOptData = np.zeros((numRenderOption, numResolution))
         for renderOptId in range(numRenderOption):
             for resolutionId in range(numResolution):
@@ -64,8 +102,12 @@ def plot_renderOption(thresholdId):
         xticks_list = allLegend[modelName[modelId]]
         plot_renderOption_bar(renderOptData, ylabel=qualityOpt[qualityId], xticks_list=xticks_list)
         outFile = join(rootDir, modelName[modelId],
-                       modelName[modelId] + "_renderOption_" + qualityOpt[qualityId] + "_faster.png")
-        plt.savefig(outFile, bbox_inches='tight')
+                       modelName[modelId] + "_renderOption_" + qualityOpt[qualityId] + "_faster.pdf")
+        # outFile = join(rootDir, modelName[modelId],
+        #                modelName[modelId] + "_renderOption_" + qualityOpt[qualityId] + ".pdf")
+        plt.tight_layout()
+        print(outFile)
+        plt.savefig(outFile)
         plt.show()
 
 
@@ -80,10 +122,10 @@ if __name__== "__main__":
     numResolution = 6
 
     allLegend = dict()
-    allLegend['Lucy'] = ['1k', '3k', '5k', '10k', '25k', '100k']
-    allLegend['angel'] = ['1k', '3k', '5k', '10k', '25k', '50k']
-    allLegend['Armadillo'] = ['1k', '3k', '5k', '10k', '25k', '35k']
-    allLegend['bunny'] = ['1k', '3k', '5k', '10k', '25k', '70k']
+    allLegend['Lucy'] = ['1K', '3K', '5K', '10K', '25K', '100K']
+    allLegend['angel'] = ['1K', '3K', '5K', '10K', '25K', '50K']
+    allLegend['Armadillo'] = ['1K', '3K', '5K', '10K', '25K', '35K']
+    allLegend['bunny'] = ['1K', '3K', '5K', '10K', '25K', '70K']
     thresholds = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]) * 0.0002
     renderOpts = [0, 1, 2, 3, 4]
     renderLabels = ['F1', 'F0', 'F0F1', 'F0F1F2', 'F0F1F2F3']
@@ -94,6 +136,7 @@ if __name__== "__main__":
     # modelId = 3
         resolutionId = 2
         rootDir = "/Users/sfhan/Dropbox/stereoRepoj/Results"
+        # datafile = join(rootDir, modelName[modelId], modelName[modelId] + "_model_threshold_renderOption2.csv")
         datafile = join(rootDir, modelName[modelId], modelName[modelId] + "_model_threshold_renderOption_faster2.csv")
         data = readCSV(datafile)
         plot_threshold_resolution(1)

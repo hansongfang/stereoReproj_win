@@ -4,6 +4,9 @@ import numpy as np
 from os.path import join
 from utils import readCSV
 import matplotlib.pyplot as plt
+import seaborn as sns
+
+from matplotlib.ticker import FormatStrFormatter
 
 
 def getData(renderOptId, rotateId, qualityOffset):
@@ -15,6 +18,10 @@ def getData(renderOptId, rotateId, qualityOffset):
 
 def plot_rotatePeriod_quality():
     """line marker graph rotatePeriod -> PSNR"""
+    sns.set(style="whitegrid")
+    sns.set_context("paper")
+
+
     colors = ['C0', 'C1', 'C2', 'C3', 'y', 'C9', 'C7']
     for qualityId in range(2):
         y1 = np.zeros(numRotates, dtype=np.float)
@@ -23,14 +30,28 @@ def plot_rotatePeriod_quality():
             y1[rotateId] = getData(0, rotateId, qualityOffset=qualityId)
             y2[rotateId] = getData(1, rotateId, qualityOffset=qualityId)
 
-        plt.plot(rotatePeriod, y1, color='C0', marker='o', linestyle='-', linewidth=2, markersize=6)
-        plt.plot(rotatePeriod, y2, color='C1', marker='o', linestyle='-', linewidth=2, markersize=6)
-        plt.legend(['F0F1', 'F1F0'])
-        plt.xlabel('rotate period')
-        plt.ylabel(qualityOpt[qualityId])
+        plt.figure(figsize=(4, 3))
+
+        if qualityId == 0:
+            ax = plt.gca()
+            ax.yaxis.set_major_formatter(FormatStrFormatter('%d'))
+        elif qualityId == 1:
+            ax = plt.gca()
+            ax.yaxis.set_major_formatter(FormatStrFormatter('%.3f'))
+
+
+        plt.plot(rotatePeriod, y1, color='C0', marker='o', linestyle='-', linewidth=2, markersize=4)
+        plt.plot(rotatePeriod, y2, color='C1', marker='o', linestyle='-', linewidth=2, markersize=4)
+        plt.legend(['F0F1', 'F1F0'], fontsize=8)
+        plt.xlabel('Rotate Period', fontsize=8)
+        plt.xticks(fontsize=7)
+        plt.xlim([0, 650])
+        plt.ylabel(qualityOpt[qualityId], fontsize=8)
+        plt.yticks(fontsize=7)
         outFile = join(rootDir, modelName[modelId],
-                       models[modelName[modelId]][coarseResId] + "_rot{}_".format(renderMode) + qualityOpt[qualityId]+".png")
-        plt.savefig(outFile, bbox_inches='tight')
+                       models[modelName[modelId]][coarseResId] + "_rot{}_".format(renderMode) + qualityOpt[qualityId]+".pdf")
+        plt.tight_layout()
+        plt.savefig(outFile)
         plt.show()
 
 
