@@ -218,20 +218,20 @@ void main()
     repColor[i] = temp.rgb;
     repDiff[i] = temp.a;
   }
-color = vec4(0.0, 0.0, 1.0, 0.0);
+  color = vec4(0.0, 0.0, 1.0, 0.0);
 
-    if(repDiff[0] < threshold && repDiff[0] > epsilon){
-      color = vec4(repColor[0], 1.0);
-    }
-    else if(repDiff[1] < threshold && repDiff[1] > epsilon){
-      color = vec4(repColor[1], 1.0);
-    }
-    else if(repDiff[2] < threshold && repDiff[2] > epsilon){
-      color = vec4(repColor[2], 1.0);
-    }
-    else if(repDiff[0] >= threshold || repDiff[1] >= threshold || repDiff[2] >= threshold){
-      discard;
-    }
+  if(repDiff[0] < threshold && repDiff[0] > epsilon){
+    color = vec4(repColor[0], 1.0);
+  }
+  else if(repDiff[1] < threshold && repDiff[1] > epsilon){
+    color = vec4(repColor[1], 1.0);
+  }
+  else if(repDiff[2] < threshold && repDiff[2] > epsilon){
+    color = vec4(repColor[2], 1.0);
+  }
+  else if(repDiff[0] >= threshold || repDiff[1] >= threshold || repDiff[2] >= threshold){
+    discard;
+  }
 	
   
  //if(repDiff[0] < threshold && repDiff[0] > epsilon){

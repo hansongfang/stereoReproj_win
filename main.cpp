@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
 								"Armadillo25k_o", "Armadillo35k" };
 	MODELS[3] = vector<string>{ "bunny1k_o", "bunny3k_o", "bunny5k_o", "bunny10k_o", "bunny25k_o", "bunny70k" };
 
-	if (1) {
+	if (0) {
 		//-----------------------------input---------------------------------------------------------//
 		//int modelId = 0;
 		int oriResId = 5;
@@ -82,6 +82,7 @@ int main(int argc, char* argv[])
 	}
 	if(1){
 		// simple & vs // ps // both
+		// reshading & non reshading
 
 		int oriResId = 5;
 		string fmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][oriResId] + ".ply";
@@ -110,19 +111,37 @@ int main(int argc, char* argv[])
 		int numLoopx = 3;
 		int numLoopy = 3;
 		int numRows = numLoopx * numLoopy;
-		int numCols = 2 + numCoarseModels *3;
-		vector<vector<double>> qualityTable(numRenderOption * numThresholds, vector<double>(2 + numCoarseModels * 2, 0.0));
-		for(int loopxId){
-			for(int loopyId){
-				//update complexity
-				for(coarseModelId){
-					// update coarseModel
-					// get model PSNR, SSIM, renderingTime
+		int numCols = 2 + numCoarseModels * 4;
+		vector<vector<double>> qualityTable(numRows, vector<double>(numCols, 0.0));
+		for(int loopxId=0; loopxId < numLoopx; loopxId++){
+			int loopx = loopxOptions[loopxId];
+			for(int loopyId=0; loopyId < numLoopy; loopyId++){
+				int loopy = loopyOptions[loopyId];
+				reprojMT.updateShaderComplex(loopx, loopy);
+				for(int coarseModelId = 0; coarseModelId < numCoarseModels; coarseModelId++){
+					outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseModelId] + "/";
+					cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseModelId] + ".ply";
+					cout << "coarse model " << cmodelPath << endl;
+					reprojMT.updateCoarseModel(cmodelPath);
+					reprojMT.updateDirectory(outDir);
+
+					auto res = reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);
+					int rowId = loopxId * numLoopy + loopxId;
+					qualityTable[rowId][0] = renderOption;
+					qualityTable[rowId][1] = thresholdVal;
+					qualityTable[rowId][2 + coarseModelId * 4] = res[0];
+					qualityTable[rowId][3 + coarseModelId * 4] = res[1];
+					qualityTable[rowId][4 + coarseModelId * 4] = res[2];
+					qualityTable[rowId][5 + coarseModelId * 4] = res[3];
 				}
 			}
 		}
 
-
+		string ofileName = RESULTDIR + MODELNAMES[modelId] + "/" + MODELNAMES[modelId] + "_" + "model_complexity_time_noreshading.csv";
+		cout << "save excel " << ofileName << endl;
+		ofstream ofile(ofileName);
+		write_csv(qualityTable, numRows, numCols, ofile);
+		ofile.close();
 
 	}
 	if (0)
