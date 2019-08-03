@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from os.path import join
 from utils import readCSV
+import seaborn as sns
 
 
 def getData(resolutionId, freshOptId, qualityOffset):
@@ -27,16 +28,28 @@ def plot_freshrate_bar(renderOptData, ylabel, xticks_list):
     total_width = 0.8
     bar_width = total_width / numFreshOption
 
+
+    # sns.set(style='darkgrid')
+    # sns.set_context("talk")
+
+    sns.set(style="whitegrid")
+    sns.set_context("paper")
+
+    fig = plt.figure(figsize=(4, 3))
+    plt.tight_layout()
+
     colors = ['C0', 'C1', 'C2', 'C3', 'y', 'C9', 'C7']
     for id in range(numFreshOption):
         plt.bar(x + bar_width * id, renderOptData[id, :], width=bar_width, label=freshLabels[id], color=colors[id])
-    plt.xlabel('resolution')
     low = np.min(renderOptData)
     high = np.max(renderOptData)
     plt.ylim([low - 0.5 * (high - low), high + 0.5 * (high - low)])
-    plt.ylabel(ylabel)
-    plt.xticks(x + 2.5 * bar_width, xticks_list)
-    plt.legend()
+    plt.ylabel(ylabel, fontsize=8)
+    plt.yticks(fontsize=6)
+    plt.xlabel('resolution', fontsize=8)
+    plt.xticks(x + 2.5 * bar_width, xticks_list, fontsize=6)
+    plt.legend(fontsize=7, loc='upper left')
+
 
 
 def plot_freshrate_groupbar():
@@ -53,8 +66,10 @@ def plot_freshrate_groupbar():
         xticks_list = allLegend[modelName[modelId]]
         plot_freshrate_bar(renderOptData, ylabel=qualityLabel, xticks_list=xticks_list)
         outFile = join(rootDir, modelName[modelId],
-                       modelName[modelId] + "_freshrate_refRender_{}.png".format(qualityLabel))
-        plt.savefig(outFile, bbox_inches='tight')
+                       modelName[modelId] + "_freshrate_{}.pdf".format(qualityLabel))
+        # outFile = join(rootDir, modelName[modelId], modelName[modelId] + "_freshrate_refRender_{}.pdf".format(qualityLabel))
+        # plt.savefig(outFile, bbox_inches='tight')
+        plt.savefig(outFile)
         plt.show()
 
 
@@ -83,6 +98,7 @@ if __name__=="__main__":
     for modelId in range(4):
         #modelId = 0
         rootDir = "/Users/sfhan/Dropbox/stereoRepoj/Results"
-        datafile = join(rootDir, modelName[modelId], modelName[modelId] + "_model_freshcount_F0_refRender_quality.csv")
+        datafile = join(rootDir, modelName[modelId], modelName[modelId] + "_model_freshcount_F0_quality.csv")
+        # datafile = join(rootDir, modelName[modelId], modelName[modelId] + "_model_freshcount_F0_refRender_quality.csv")
         data = readCSV(datafile)
         plot_freshrate_groupbar()
