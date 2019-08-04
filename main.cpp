@@ -32,10 +32,10 @@ int main(int argc, char* argv[])
 	auto result = options.parse(argc, argv);
 	int modelId = result["model"].as<int>();
 	int coarseResId = result["coarsemodel"].as<int>();
-	int loopx = result["loopx"].as<int>();
-	int loopy = result["loopy"].as<int>();
+	//int loopx = result["loopx"].as<int>();
+	//int loopy = result["loopy"].as<int>();
 	cout << "modelId " << modelId << endl;
-	cout << loopx << " " << loopy << endl;
+	//cout << loopx << " " << loopy << endl;
 	/*
 	auto dir = result["root"].as<string>();
 	*/
@@ -75,6 +75,10 @@ int main(int argc, char* argv[])
 		bool measureQuality = true;
 		reprojMT.updateQuality(measureQuality);
 		reprojMT.updateRenderOption(renderOptId);
+
+
+		int loopx = 50;
+		int loopy = 50;
 		reprojMT.updateShaderComplex(loopx, loopy);
 		auto res = reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);
 		cout << res[2] << " " << res[3] << endl;
@@ -127,8 +131,8 @@ int main(int argc, char* argv[])
 
 					auto res = reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);
 					int rowId = loopxId * numLoopy + loopxId;
-					qualityTable[rowId][0] = renderOption;
-					qualityTable[rowId][1] = thresholdVal;
+					qualityTable[rowId][0] = loopx;
+					qualityTable[rowId][1] = loopy;
 					qualityTable[rowId][2 + coarseModelId * 4] = res[0];
 					qualityTable[rowId][3 + coarseModelId * 4] = res[1];
 					qualityTable[rowId][4 + coarseModelId * 4] = res[2];
