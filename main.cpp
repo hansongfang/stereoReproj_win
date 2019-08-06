@@ -117,6 +117,7 @@ int main(int argc, char* argv[])
 		int numRows = numLoopx * numLoopy;
 		int numCols = 2 + numCoarseModels * 4;
 		vector<vector<double>> qualityTable(numRows, vector<double>(numCols, 0.0));
+		cout<<"qualityTable: "<<numRows<<" "<<numCols<<endl;
 
 		for(int coarseModelId = 0; coarseModelId < numCoarseModels; coarseModelId++){
 			outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseModelId] + "/";
@@ -135,6 +136,7 @@ int main(int argc, char* argv[])
 
 					int rowId = loopxId * numLoopy + loopxId;
 					int colId = 2 + coarseModelId * 4;
+					cout<<"write row "<<rowId<<" col: "<<colId<<endl;
 					qualityTable[rowId][colId] = res[0];
 					qualityTable[rowId][colId+1] = res[1];
 					qualityTable[rowId][colId+2] = res[2];
