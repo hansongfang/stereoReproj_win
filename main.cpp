@@ -15,6 +15,7 @@
 using namespace std;
 
 string SHADERPATH = "G:/vr/stereoReproj/shaders/";
+// update window height & width
 const int WINDOWHEIGHT = 840;
 const int WINDOWWIDTH = 939;
 
@@ -71,7 +72,7 @@ int main(int argc, char* argv[])
 		float thresholdVal = 0.0016;
 		bool leftPrimary = true;
 		bool enableFlip = false;
-		bool debug = false;
+		bool debug = true;
 		bool measureQuality = true;
 		reprojMT.updateQuality(measureQuality);
 		reprojMT.updateRenderOption(renderOptId);
