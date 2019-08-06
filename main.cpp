@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
 								"Armadillo25k_o", "Armadillo35k" };
 	MODELS[3] = vector<string>{ "bunny1k_o", "bunny3k_o", "bunny5k_o", "bunny10k_o", "bunny25k_o", "bunny70k" };
 
-	if (0) {
+	if (1) {
 		//-----------------------------input---------------------------------------------------------//
 		//int modelId = 0;
 		int oriResId = 5;
@@ -66,12 +66,12 @@ int main(int argc, char* argv[])
 		reprojMT.setPath(2, 1, 2);
 		//        reprojMT.setPath3(1, 1, 2, 200, 30, 10);
 
-				//-------------------render option----------------------------------//
+		//-------------------render option----------------------------------//
 		int renderOptId = 3;
 		float thresholdVal = 0.0016;
 		bool leftPrimary = true;
 		bool enableFlip = false;
-		bool debug = true;
+		bool debug = false;
 		bool measureQuality = true;
 		reprojMT.updateQuality(measureQuality);
 		reprojMT.updateRenderOption(renderOptId);
@@ -82,9 +82,8 @@ int main(int argc, char* argv[])
 		reprojMT.updateShaderComplex(loopx, loopy);
 		auto res = reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);
 		cout << res[2] << " " << res[3] << endl;
-		getchar();
 	}
-	if(1){
+	if(0){
 		// simple & vs // ps // both
 		// reshading & non reshading
 
