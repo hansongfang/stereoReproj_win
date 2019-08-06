@@ -232,9 +232,9 @@ void main()
   else if(repDiff[0] >= threshold || repDiff[1] >= threshold || repDiff[2] >= threshold){
     discard;
   }
-  // else{
-  //   color = reShading();
-  // }
+  else{
+    color = reShading();
+  }
 	
   
  //if(repDiff[0] < threshold && repDiff[0] > epsilon){

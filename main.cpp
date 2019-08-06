@@ -137,6 +137,8 @@ int main(int argc, char* argv[])
 					int rowId = loopxId * numLoopy + loopyId;
 					int colId = 2 + coarseModelId * 4;
 					cout<<"write row "<<rowId<<" col: "<<colId<<endl;
+					qualityTable[rowId][0] = loopx;
+					qualityTable[rowId][1] = loopy;
 					qualityTable[rowId][colId] = res[0];
 					qualityTable[rowId][colId+1] = res[1];
 					qualityTable[rowId][colId+2] = res[2];
@@ -145,7 +147,7 @@ int main(int argc, char* argv[])
 			}
 		}
 
-		string ofileName = RESULTDIR + MODELNAMES[modelId] + "/" + MODELNAMES[modelId] + "_" + "model_complexity_time_noreshading.csv";
+		string ofileName = RESULTDIR + MODELNAMES[modelId] + "/" + MODELNAMES[modelId] + "_" + "model_complexity_time_reshading.csv";
 		cout << "save excel " << ofileName << endl;
 		ofstream ofile(ofileName);
 		write_csv(qualityTable, numRows, numCols, ofile);
