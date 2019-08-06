@@ -109,8 +109,8 @@ int main(int argc, char* argv[])
 		reprojMT.updateRenderOption(renderOptId);
 
 		// resolution // (loopx & loopy)
-		vector<int> loopxOptions = {1, 50, 100};
-		vector<int> loopyOptions = {1, 50, 100};
+		vector<int> loopxOptions = {1, 50};
+		vector<int> loopyOptions = {1, 50};
 		int numCoarseModels = 6;
 		int numLoopx = loopxOptions.size();
 		int numLoopy = loopyOptions.size();
