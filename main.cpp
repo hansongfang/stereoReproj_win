@@ -92,7 +92,7 @@ int main(int argc, char* argv[])
 		string fmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][oriResId] + ".ply";
 		string cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + ".ply";
 		string outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + "/";
-		int numFrames = 10;
+		int numFrames = 30;
 
 		int numTargets = 4;
 		ReprojMT reprojMT(WINDOWHEIGHT, WINDOWWIDTH);
