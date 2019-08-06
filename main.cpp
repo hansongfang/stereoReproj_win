@@ -134,7 +134,7 @@ int main(int argc, char* argv[])
 					reprojMT.updateShaderComplex(loopx, loopy);
 					auto res = reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);
 
-					int rowId = loopxId * numLoopy + loopxId;
+					int rowId = loopxId * numLoopy + loopyId;
 					int colId = 2 + coarseModelId * 4;
 					cout<<"write row "<<rowId<<" col: "<<colId<<endl;
 					qualityTable[rowId][colId] = res[0];
