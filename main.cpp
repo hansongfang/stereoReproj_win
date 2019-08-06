@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
 								"Armadillo25k_o", "Armadillo35k" };
 	MODELS[3] = vector<string>{ "bunny1k_o", "bunny3k_o", "bunny5k_o", "bunny10k_o", "bunny25k_o", "bunny70k" };
 
-	if (1) {
+	if (0) {
 		//-----------------------------input---------------------------------------------------------//
 		//int modelId = 0;
 		int oriResId = 5;
@@ -84,7 +84,7 @@ int main(int argc, char* argv[])
 		auto res = reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);
 		cout << res[2] << " " << res[3] << endl;
 	}
-	if(0){
+	if(1){
 		// simple & vs // ps // both
 		// reshading & non reshading
 
@@ -92,7 +92,7 @@ int main(int argc, char* argv[])
 		string fmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][oriResId] + ".ply";
 		string cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + ".ply";
 		string outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseResId] + "/";
-		int numFrames = 30;
+		int numFrames = 10;
 
 		int numTargets = 4;
 		ReprojMT reprojMT(WINDOWHEIGHT, WINDOWWIDTH);
@@ -103,7 +103,7 @@ int main(int argc, char* argv[])
 		float thresholdVal = 0.0016;
 		bool leftPrimary = true;
 		bool enableFlip = false;
-		bool debug = true;
+		bool debug = false;
 		bool measureQuality = true;
 		reprojMT.updateQuality(measureQuality);
 		reprojMT.updateRenderOption(renderOptId);
@@ -112,31 +112,33 @@ int main(int argc, char* argv[])
 		vector<int> loopxOptions = {1, 50, 100};
 		vector<int> loopyOptions = {1, 50, 100};
 		int numCoarseModels = 6;
-		int numLoopx = 3;
-		int numLoopy = 3;
+		int numLoopx = loopxOptions.size();
+		int numLoopy = loopyOptions.size();
 		int numRows = numLoopx * numLoopy;
 		int numCols = 2 + numCoarseModels * 4;
 		vector<vector<double>> qualityTable(numRows, vector<double>(numCols, 0.0));
-		for(int loopxId=0; loopxId < numLoopx; loopxId++){
-			int loopx = loopxOptions[loopxId];
-			for(int loopyId=0; loopyId < numLoopy; loopyId++){
-				int loopy = loopyOptions[loopyId];
-				reprojMT.updateShaderComplex(loopx, loopy);
-				for(int coarseModelId = 0; coarseModelId < numCoarseModels; coarseModelId++){
-					outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseModelId] + "/";
-					cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseModelId] + ".ply";
-					cout << "coarse model " << cmodelPath << endl;
-					reprojMT.updateCoarseModel(cmodelPath);
-					reprojMT.updateDirectory(outDir);
 
+		for(int coarseModelId = 0; coarseModelId < numCoarseModels; coarseModelId++){
+			outDir = RESULTDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseModelId] + "/";
+			cmodelPath = MODELDIR + MODELNAMES[modelId] + "/" + MODELS[modelId][coarseModelId] + ".ply";
+			cout << "coarse model " << cmodelPath << endl;
+			reprojMT.updateCoarseModel(cmodelPath);
+			reprojMT.updateDirectory(outDir);
+
+			for(int loopxId=0; loopxId < numLoopx; loopxId++){
+				int loopx = loopxOptions[loopxId];
+				for(int loopyId=0; loopyId < numLoopy; loopyId++){
+					int loopy = loopyOptions[loopyId];
+
+					reprojMT.updateShaderComplex(loopx, loopy);
 					auto res = reprojMT.renderReprojMT(thresholdVal, leftPrimary, enableFlip, debug);
+
 					int rowId = loopxId * numLoopy + loopxId;
-					qualityTable[rowId][0] = loopx;
-					qualityTable[rowId][1] = loopy;
-					qualityTable[rowId][2 + coarseModelId * 4] = res[0];
-					qualityTable[rowId][3 + coarseModelId * 4] = res[1];
-					qualityTable[rowId][4 + coarseModelId * 4] = res[2];
-					qualityTable[rowId][5 + coarseModelId * 4] = res[3];
+					int colId = 2 + coarseModelId * 4;
+					qualityTable[rowId][colId] = res[0];
+					qualityTable[rowId][colId+1] = res[1];
+					qualityTable[rowId][colId+2] = res[2];
+					qualityTable[rowId][colId+3] = res[3];
 				}
 			}
 		}
