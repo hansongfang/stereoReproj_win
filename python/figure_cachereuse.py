@@ -13,6 +13,7 @@ if __name__=="__main__":
     out_file2 = join(res_dir, "eq6_diff.png")
     diff_file = join(res_dir, "cachereuseDiff.png")
 
+
     coarseDI = cv2.imread(coarseDI_file).astype(np.float)
     fineDI = cv2.imread(fineDI_file).astype(np.float)
     gtI = cv2.imread(gt_file).astype(np.float)
@@ -25,7 +26,9 @@ if __name__=="__main__":
     crop_gtI = gtI[y1:y2, x1:x2, :]
     out_I_v1 = np.concatenate((crop_coarseDI, crop_fineDI, crop_gtI), axis=1)
     cv2.imwrite(out_file1, out_I_v1.astype(np.uint8))
-
+    cv2.imwrite(join(res_dir, "cachereuse_coarseD.png"), crop_coarseDI)
+    cv2.imwrite(join(res_dir, "cachereuse_FineD.png"), crop_fineDI)
+    cv2.imwrite(join(res_dir, "cachereuse_gt.png"), crop_gtI)
 
     crop_diff_coarseDI = colorDiff(crop_gtI, crop_coarseDI, diff_max=255.0, diff_min=0.0) * 255.0
     crop_diff_coarseDI = crop_diff_coarseDI[:, :, ::-1]
